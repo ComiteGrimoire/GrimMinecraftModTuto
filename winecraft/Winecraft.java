@@ -39,7 +39,7 @@ public class Winecraft {
                 
                 
                 ItemStack dirtStack = new ItemStack(Block.dirt);
-                ItemStack diamondsStack = new ItemStack(Item.diamond, 64);
+                ItemStack diamondsStack = new ItemStack(Item.diamond, 63);
 
                 GameRegistry.addShapelessRecipe(diamondsStack, dirtStack);
         }
