@@ -1,6 +1,7 @@
 <h1>Mods Tutoriel du Grimoire</h1>
 
-<h5>Liste des mods</h4>
+<h5>Liste des mods</h5>
+
 * Winecraft/ 
 <br/><p>Ce mod rajoute le raisin à Minecraft et permet la création de vins.</p>
 
