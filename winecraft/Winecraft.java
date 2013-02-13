@@ -40,8 +40,11 @@ public class Winecraft {
                 
                 ItemStack dirtStack = new ItemStack(Block.dirt);
                 ItemStack diamondsStack = new ItemStack(Item.diamond, 63);
-
+                ItemStack woodStack = new ItemStack(Block.wood);
+                ItemStack cobblestoneStack = new ItemStack(Block.cobblestone);
+                
                 GameRegistry.addShapelessRecipe(diamondsStack, dirtStack);
+                GameRegistry.addShapelessRecipe(diamondsStack, woodStack, cobblestoneStack);
         }
        
         @PostInit
