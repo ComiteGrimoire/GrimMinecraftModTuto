@@ -1,6 +1,9 @@
 package tutorial.winecraft;
 
+import tutorial.winecraft.barrel.BarrelBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
@@ -22,8 +25,10 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 @Mod(modid="Winecraft", name="Winecraft", version="0.0.0")
 @NetworkMod(clientSideRequired=true, serverSideRequired=false)
 public class Winecraft {
+		public static final Block barrelBlock = new BarrelBlock(505, Material.iron);
+    
 		public static final Block grapeCrop = new GrapeCrop(504);
-	    public static final ItemSeeds grapeSeeds = (ItemSeeds) new ItemSeeds(5001,
+		public static final ItemSeeds grapeSeeds = (ItemSeeds) new ItemSeeds(5001,
 	            									grapeCrop.blockID, 
 	            									Block.tilledField.blockID)
 	    											.setIconIndex(2)
@@ -68,6 +73,15 @@ public class Winecraft {
                 
                 //Add wine
                 LanguageRegistry.addName(wine, "Wine");
+                
+                //Barrel stuffs
+                barrelBlock
+                	.setTextureFile(CommonProxy.BLOCK_PNG)
+                	//.setBlockName("barrelBlock")
+                	.setCreativeTab(CreativeTabs.tabBlock);
+                
+                LanguageRegistry.addName(barrelBlock, "Barrel");
+                GameRegistry.registerBlock(barrelBlock, "Barrel");
                 
                 //Recipes go here
                 //Four grapes yield 1 wine

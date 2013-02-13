@@ -23,6 +23,9 @@ public class GrapeCrop extends BasicBlock {
         return null;
     }
 
+    /**
+     *  6 = Render as crop (http://www.minecraftforum.net/topic/241903-creating-mods-mcp-getrendertype/)
+     */
     @Override
     public int getRenderType () {
         return 6;
