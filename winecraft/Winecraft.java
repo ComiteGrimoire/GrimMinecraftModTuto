@@ -24,7 +24,11 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class Winecraft {
 		public static final Block grapeCrop = new GrapeCrop(504);
 	    public static final ItemSeeds grapeSeeds = (ItemSeeds) new ItemSeeds(5001,
-	            grapeCrop.blockID, Block.tilledField.blockID).setIconIndex(2).setItemName("seeds.grape").setTextureFile(CommonProxy.ITEMS_PNG);
+	            									grapeCrop.blockID, 
+	            									Block.tilledField.blockID)
+	    											.setIconIndex(2)
+	    											.setItemName("seeds.grape")
+	    											.setTextureFile(CommonProxy.ITEMS_PNG);
 	    public static final Item grapeFruit = new WinecraftItem(5002);
 	    
         // The instance of your mod that Forge uses.

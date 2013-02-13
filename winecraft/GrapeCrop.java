@@ -10,6 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class GrapeCrop extends BasicBlock {
 
+	//Constructeur
     public GrapeCrop (int id) {
         super(id, 32, Material.plants);
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.5F, 1.0F);
@@ -26,17 +27,20 @@ public class GrapeCrop extends BasicBlock {
     public int getRenderType () {
         return 6;
     }
-
+    
+    //Is the block opaque?
     @Override
     public boolean isOpaqueCube () {
         return false;
     }
-
+    
+    
     @Override
     public int getBlockTextureFromSideAndMetadata (int side, int metadata) {
         return 32 + metadata;
     }
 
+    //Is called every Minecraft Tick (20 times/second.)
     @Override
     public void updateTick (World world, int x, int y, int z, Random random) {
         if (world.getBlockMetadata(x, y, z) == 1) {
@@ -68,6 +72,7 @@ public class GrapeCrop extends BasicBlock {
                         ForgeDirection.UP, Winecraft.grapeSeeds));
     }
 
+    //Définit le drop de la plante (mature?)
     @Override
     public int idDropped (int metadata, Random random, int par2) {
         switch (metadata) {
