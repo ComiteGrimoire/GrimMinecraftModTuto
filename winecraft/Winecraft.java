@@ -24,8 +24,13 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class Winecraft {
 		public static final Block grapeCrop = new GrapeCrop(504);
 	    public static final ItemSeeds grapeSeeds = (ItemSeeds) new ItemSeeds(5001,
-	            grapeCrop.blockID, Block.tilledField.blockID).setIconIndex(2).setItemName("seeds.grape").setTextureFile(CommonProxy.ITEMS_PNG);
+	            									grapeCrop.blockID, 
+	            									Block.tilledField.blockID)
+	    											.setIconIndex(2)
+	    											.setItemName("seeds.grape")
+	    											.setTextureFile(CommonProxy.ITEMS_PNG);
 	    public static final Item grapeFruit = new WinecraftItem(5002);
+	    public static final Item wine = new WinecraftItem(5003).setItemName("drink.wine");
 	    
         // The instance of your mod that Forge uses.
         @Instance("Winecraft")
@@ -44,15 +49,27 @@ public class Winecraft {
         public void load(FMLInitializationEvent event) {
                 proxy.registerRenderers();
                 
+                //Variable declarations
+                ItemStack grapes = new ItemStack(grapeFruit);
+                
                 // Add grape seed
                 LanguageRegistry.addName(grapeSeeds, "Grape Seeds");
                 MinecraftForge.addGrassSeed(new ItemStack(grapeSeeds), 10);
 
+                //Add grape fruits
                 LanguageRegistry.addName(grapeFruit, "Grape");
                 GameRegistry.addShapelessRecipe(new ItemStack(grapeSeeds, 4),
                         new ItemStack(grapeFruit));
 
+                //Add grape crops
                 GameRegistry.registerBlock(grapeCrop, "GrapeCrop");
+                
+                //Add wine
+                LanguageRegistry.addName(wine, "Wine");
+                
+                //Recipes go here
+                //Four grapes yield 1 wine
+                GameRegistry.addShapelessRecipe(new ItemStack(wine), grapes, grapes, grapes, grapes);
         }
        
         @PostInit
