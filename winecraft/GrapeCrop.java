@@ -72,7 +72,7 @@ public class GrapeCrop extends BasicBlock {
                         ForgeDirection.UP, Winecraft.grapeSeeds));
     }
 
-    //Définit le drop de la plante (mature?)
+    // Decide what to drop when destroy
     @Override
     public int idDropped (int metadata, Random random, int par2) {
         switch (metadata) {

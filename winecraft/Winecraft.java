@@ -30,7 +30,9 @@ public class Winecraft {
 	    											.setItemName("seeds.grape")
 	    											.setTextureFile(CommonProxy.ITEMS_PNG);
 	    public static final Item grapeFruit = new WinecraftItem(5002);
-	    public static final Item wine = new WinecraftItem(5003).setItemName("drink.wine");
+	    public static final Item wine = new WinecraftItem(5003).setItemName("drink.wine")
+	    		.setIconIndex(1)
+	    		.setTextureFile(CommonProxy.ITEMS_PNG);
 	    
         // The instance of your mod that Forge uses.
         @Instance("Winecraft")
