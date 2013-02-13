@@ -10,3 +10,10 @@
 
 * <a src="http://www.minecraftforge.net/wiki/Generic_Mod" target="__blank">Generic mod tutoriel</a>
 <br/><p>Ce tutoriel explore les bases du développement avec forge.</p>
+
+<h5>Todo</h5>
+
+[ ] Fermentation block (barrel)
+[ ] Add effect to wine
+[ ] Add unique property to grape (depending on weather)
+[ ] Different type of grape
