@@ -1,6 +1,7 @@
 package tutorial.winecraft;
 
 import tutorial.winecraft.barrel.BarrelBlock;
+import tutorial.winecraft.barrel.BarrelTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,6 +20,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
@@ -79,9 +81,13 @@ public class Winecraft {
                 	.setTextureFile(CommonProxy.BLOCK_PNG)
                 	//.setBlockName("barrelBlock")
                 	.setCreativeTab(CreativeTabs.tabBlock);
+
+                GameRegistry.registerTileEntity(BarrelTileEntity.class, "BarrelContainer");
+                NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
                 
                 LanguageRegistry.addName(barrelBlock, "Barrel");
                 GameRegistry.registerBlock(barrelBlock, "Barrel");
+
                 
                 //Recipes go here
                 //Four grapes yield 1 wine

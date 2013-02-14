@@ -14,7 +14,8 @@
 <h5>Todo</h5>
 
 <pre>
-[ ] Fermentation block (barrel) 
+[ ] Fermentation block (barrel)
+[ ] Add custom slot and custom recipe to the Barrel 
 [ ] Add effect to wine
 [ ] Add unique property to grape (depending on weather)
 [ ] Different type of grape

@@ -3,11 +3,13 @@ package tutorial.winecraft.barrel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 
-public class BarrelTileEntity extends TileEntity  implements IInventory, ISidedInventory{
+public class BarrelTileEntity extends TileEntity  implements IInventory/**, ISidedInventory*/{
 
     /** 
      * Hold the currently placed items in the slots of the barrel 
@@ -71,7 +73,7 @@ public class BarrelTileEntity extends TileEntity  implements IInventory, ISidedI
 	 * Returns the maximum stack size for a inventory slot. 
 	 */
 	public int getInventoryStackLimit() {
-		return 1;
+		return 64;
 	}
 
 	/** 
@@ -90,7 +92,7 @@ public class BarrelTileEntity extends TileEntity  implements IInventory, ISidedI
 
 	/** 
 	 * I have no idea what going on here... Just copy-past the BrewingStand source code 
-	 */
+	 
 	@Override
 	public int getStartInventorySide(ForgeDirection side) {
 		return (side == ForgeDirection.UP ? 3 : 0);
@@ -100,5 +102,35 @@ public class BarrelTileEntity extends TileEntity  implements IInventory, ISidedI
 	public int getSizeInventorySide(ForgeDirection side) {
 		return (side == ForgeDirection.UP ? 1 : 3);
 	}
+	*/
+	@Override
+    public void readFromNBT(NBTTagCompound tagCompound) {
+            super.readFromNBT(tagCompound);
+           
+            NBTTagList tagList = tagCompound.getTagList("Inventory");
+            for (int i = 0; i < tagList.tagCount(); i++) {
+                    NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(i);
+                    byte slot = tag.getByte("Slot");
+                    if (slot >= 0 && slot < barrelItemStacks.length) {
+                    	barrelItemStacks[slot] = ItemStack.loadItemStackFromNBT(tag);
+                    }
+            }
+    }
 
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound) {
+            super.writeToNBT(tagCompound);
+                           
+            NBTTagList itemList = new NBTTagList();
+            for (int i = 0; i < barrelItemStacks.length; i++) {
+                    ItemStack stack = barrelItemStacks[i];
+                    if (stack != null) {
+                            NBTTagCompound tag = new NBTTagCompound();
+                            tag.setByte("Slot", (byte) i);
+                            stack.writeToNBT(tag);
+                            itemList.appendTag(tag);
+                    }
+            }
+            tagCompound.setTag("Inventory", itemList);
+    }
 }
