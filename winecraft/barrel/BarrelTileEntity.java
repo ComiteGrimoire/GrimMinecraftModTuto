@@ -80,7 +80,7 @@ public class BarrelTileEntity extends TileEntity  implements IInventory/**, ISid
 	 * Interact if at a distance of at least 8.0 
 	 */
 	public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
-		if(this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this)
+		if(this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) == this)
 			return entityPlayer.getDistanceSq((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D) <= 64.0D;
 		else
 			return false;

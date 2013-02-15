@@ -12,7 +12,7 @@ public class BarrelContainer extends Container {
 	private BarrelTileEntity tileBarrel;
 
     /** Instance of Slot. */
-    private final Slot resultSlot;
+    //private final Slot resultSlot;
     
     /** 
      * By the way, the default parameters of the Slot object are 
@@ -20,35 +20,34 @@ public class BarrelContainer extends Container {
      */
     public BarrelContainer(InventoryPlayer inventoryPlayer, BarrelTileEntity tileBarrel){
     	this.tileBarrel = tileBarrel;
-    	this.resultSlot = this.addSlotToContainer(new Slot(inventoryPlayer, 3, 79, 17));
+    	//this.resultSlot = this.addSlotToContainer(new Slot(inventoryPlayer, 0, 79, 17));
+    	addSlotToContainer(new Slot(tileBarrel, 0, 76, 27));
     	
-    	for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-            	addSlotToContainer(new Slot(tileBarrel, j + i * 3, 62 + j * 18, 17 + i * 18));
-            }
-    	}
-    	
-    	for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-            	addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-            }
-	    }
-	
-	    for (int i = 0; i < 9; i++) {
-	    	addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
-	    }
+    	bindPlayerInventory(inventoryPlayer);
     }
     
-	
+    protected void bindPlayerInventory(InventoryPlayer player_inventory){
+    	for(int i = 0; i < 3; i++){
+	    	for(int j = 0; j < 9; j++){
+	    		addSlotToContainer(new Slot(player_inventory, j + i * 9 + 9, 9 + j * 18, 64 + i * 16));
+	    	}
+    	}
+
+    	for(int i = 0; i < 9; i++){
+    		addSlotToContainer(new Slot(player_inventory, i, 6 + i * 16, 142));
+    	}
+    }
+
+	/**
 	public void addCraftingToCrafters(ICrafting par1ICrafting){
         super.addCraftingToCrafters(par1ICrafting);
         // Need to add something to increment the progress bar here
-    }
+    }*/
 	
 	// Need to edit that for multiplayer
-	 public void detectAndSendChanges(){
-	        super.detectAndSendChanges();
-	 }
+	// public void detectAndSendChanges(){
+	 //       super.detectAndSendChanges();
+	// }
 	 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {

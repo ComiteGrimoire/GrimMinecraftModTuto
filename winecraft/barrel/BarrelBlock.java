@@ -4,11 +4,15 @@ import java.util.Random;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.src.ModLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.world.World;
@@ -32,7 +36,7 @@ public class BarrelBlock extends BlockContainer{
      * Called upon block activation (right click on the block.)
      */
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int idk, float wtf, float are, float you_doing){
-        if (world.isRemote){
+    	if (world.isRemote){
             return true;
         }
         else{
@@ -69,7 +73,7 @@ public class BarrelBlock extends BlockContainer{
                             float ry = rand.nextFloat() * 0.8F + 0.1F;
                             float rz = rand.nextFloat() * 0.8F + 0.1F;
 
-                            EntityItem entityItem = new EntityItem(world, x + rx, y + ry, z + rz, new ItemStack(item.itemID, item.stackSize, item.getItemDamage()));
+                            EntityItem entityItem = new EntityItem(world, x + rx, y + ry, z + rz,  new ItemStack(item.itemID, item.stackSize, item.getItemDamage()));
 
                             float factor = 0.05F;
                             entityItem.motionX = rand.nextGaussian() * factor;
