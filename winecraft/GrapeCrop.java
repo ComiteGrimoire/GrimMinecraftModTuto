@@ -43,7 +43,9 @@ public class GrapeCrop extends BasicBlock {
         return 32 + metadata;
     }
 
-    //Is called every Minecraft Tick (20 times/second.)
+    /***
+     * Is called every Minecraft Tick (20 times/second.)
+     */
     @Override
     public void updateTick (World world, int x, int y, int z, Random random) {
         if (world.getBlockMetadata(x, y, z) == 1) {
@@ -75,7 +77,9 @@ public class GrapeCrop extends BasicBlock {
                         ForgeDirection.UP, Winecraft.grapeSeeds));
     }
 
-    // Decide what to drop when destroy
+    /***
+     * Decide what to drop when destroy
+     */
     @Override
     public int idDropped (int metadata, Random random, int par2) {
         switch (metadata) {

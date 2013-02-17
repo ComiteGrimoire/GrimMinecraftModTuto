@@ -21,33 +21,39 @@ public class BarrelContainer extends Container {
     public BarrelContainer(InventoryPlayer inventoryPlayer, BarrelTileEntity tileBarrel){
     	this.tileBarrel = tileBarrel;
     	//this.resultSlot = this.addSlotToContainer(new Slot(inventoryPlayer, 0, 79, 17));
-    	addSlotToContainer(new Slot(tileBarrel, 0, 76, 27));
+    	addSlotToContainer(new Slot(tileBarrel, 0, 54, 34));
+    	addSlotToContainer(new Slot(tileBarrel, 0, 114, 34));
     	
     	bindPlayerInventory(inventoryPlayer);
     }
     
+    /**
+     * This function initiate the slot for the inventory of the player
+     */
     protected void bindPlayerInventory(InventoryPlayer player_inventory){
     	for(int i = 0; i < 3; i++){
 	    	for(int j = 0; j < 9; j++){
-	    		addSlotToContainer(new Slot(player_inventory, j + i * 9 + 9, 9 + j * 18, 64 + i * 16));
+	    		addSlotToContainer(new Slot(player_inventory, j + i * 9 + 9, 6 + j * 18, 84 + i * 18));
 	    	}
     	}
 
     	for(int i = 0; i < 9; i++){
-    		addSlotToContainer(new Slot(player_inventory, i, 6 + i * 16, 142));
+    		addSlotToContainer(new Slot(player_inventory, i, 6 + i * 18, 142));
     	}
     }
 
-	/**
+	
 	public void addCraftingToCrafters(ICrafting par1ICrafting){
         super.addCraftingToCrafters(par1ICrafting);
         // Need to add something to increment the progress bar here
-    }*/
+    }
 	
-	// Need to edit that for multiplayer
-	// public void detectAndSendChanges(){
-	 //       super.detectAndSendChanges();
-	// }
+	/**
+	 *  Need to edit that for multiplayer
+	 */
+	public void detectAndSendChanges(){
+	      super.detectAndSendChanges();
+	}
 	 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
