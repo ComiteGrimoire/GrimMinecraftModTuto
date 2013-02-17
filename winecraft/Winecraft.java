@@ -1,8 +1,8 @@
 package tutorial.winecraft;
 
-import tutorial.winecraft.barrel.BarrelBlock;
-import tutorial.winecraft.barrel.BarrelGui;
-import tutorial.winecraft.barrel.BarrelTileEntity;
+import tutorial.winecraft.barrel.BlockBarrel;
+import tutorial.winecraft.barrel.GuiBarrel;
+import tutorial.winecraft.barrel.TileEntityBarrel;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -46,7 +46,7 @@ public class Winecraft {
 
     
 		public static final Block grapeCrop = new GrapeCrop(504);
-		public static final Block barrelBlock = new BarrelBlock(505, Material.iron);
+		public static final Block barrelBlock = new BlockBarrel(505, Material.iron);
 		public static final ItemSeeds grapeSeeds = (ItemSeeds) new ItemSeeds(5001,
 	            									grapeCrop.blockID, 
 	            									Block.tilledField.blockID)
@@ -74,7 +74,7 @@ public class Winecraft {
 
                 NetworkRegistry.instance().registerGuiHandler(this, guiHandler);
                 
-                GameRegistry.registerTileEntity(BarrelTileEntity.class, "BarrelTileEntity");
+                GameRegistry.registerTileEntity(TileEntityBarrel.class, "TileEntityBarrel");
                 
                 barrelBlock
             	.setTextureFile(CommonProxy.BLOCK_PNG)

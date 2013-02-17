@@ -7,10 +7,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 
-public class BarrelGui extends GuiContainer {
+public class GuiBarrel extends GuiContainer {
 	
-	public BarrelGui(InventoryPlayer inventoryPlayer, BarrelTileEntity tileEntity) {
-		super(new BarrelContainer(inventoryPlayer, tileEntity));
+	public GuiBarrel(InventoryPlayer inventoryPlayer, TileEntityBarrel tileEntity) {
+		super(new ContainerBarrel(inventoryPlayer, tileEntity));
 	}
 	@Override
     protected void drawGuiContainerForegroundLayer(int param1, int param2) {

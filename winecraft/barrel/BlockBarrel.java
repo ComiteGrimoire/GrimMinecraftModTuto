@@ -20,16 +20,16 @@ import tutorial.winecraft.BasicBlock;
 import tutorial.winecraft.CommonProxy;
 import tutorial.winecraft.Winecraft;
 
-public class BarrelBlock extends BlockContainer{
+public class BlockBarrel extends BlockContainer{
 	
-	public BarrelBlock(int id, Material material){
+	public BlockBarrel(int id, Material material){
 		super(id, material);
 		this.blockIndexInTexture = 3;
 	}
 
 	
 	public TileEntity createNewTileEntity(World var1){
-        return new BarrelTileEntity();
+        return new TileEntityBarrel();
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class BarrelBlock extends BlockContainer{
             return true;
         }
         else{
-        	BarrelTileEntity tileBarrel = (BarrelTileEntity)world.getBlockTileEntity(x, y, z);
+        	TileEntityBarrel tileBarrel = (TileEntityBarrel)world.getBlockTileEntity(x, y, z);
 
         	if (tileBarrel == null) {
                 return false;

@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 
-public class BarrelTileEntity extends TileEntity  implements IInventory/**, ISidedInventory*/{
+public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISidedInventory*/{
 
     /** 
      * Hold the currently placed items in the slots of the barrel 

@@ -8,8 +8,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class BarrelContainer extends Container {
-	private BarrelTileEntity tileBarrel;
+public class ContainerBarrel extends Container {
+	private TileEntityBarrel tileBarrel;
 
     /** Instance of Slot. */
     //private final Slot resultSlot;
@@ -18,7 +18,7 @@ public class BarrelContainer extends Container {
      * By the way, the default parameters of the Slot object are 
      * Slot(IInventory inventory, int slotIndex, int xDisplayPosition, int yDisplayPosition)
      */
-    public BarrelContainer(InventoryPlayer inventoryPlayer, BarrelTileEntity tileBarrel){
+    public ContainerBarrel(InventoryPlayer inventoryPlayer, TileEntityBarrel tileBarrel){
     	this.tileBarrel = tileBarrel;
     	//this.resultSlot = this.addSlotToContainer(new Slot(inventoryPlayer, 0, 79, 17));
     	addSlotToContainer(new Slot(tileBarrel, 0, 54, 34));
