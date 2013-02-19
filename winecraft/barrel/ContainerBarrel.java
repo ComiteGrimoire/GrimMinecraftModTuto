@@ -79,7 +79,6 @@ public class ContainerBarrel extends Container {
 	
 	/** 
 	 * This method is call when you use the shift key
-	 * Doesn't work currently
 	 */
 	@Override
 	 public ItemStack transferStackInSlot(EntityPlayer player, int slot){

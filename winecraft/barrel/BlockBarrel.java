@@ -50,7 +50,22 @@ public class BlockBarrel extends BlockContainer{
 	}
 	
 	/**
+	 * Different texture for different side
+	 */
+	public int getBlockTextureFromSide(int sideNumber){
+	    switch (sideNumber){
+	        case 1:
+	            return 4;
+	        case 0:
+	            return 5;
+	        default:
+	            return 3;
+	    }
+	}
+	
+	/**
      * Called upon block activation (right click on the block.)
+     * Initiate the GUI
      */
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int idk, float wtf, float are, float you_doing){
     	if (world.isRemote){

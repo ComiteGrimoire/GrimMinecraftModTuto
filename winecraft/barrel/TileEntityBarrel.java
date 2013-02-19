@@ -44,7 +44,7 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
 	}
 
 	/** 
-	 * We check if i is in @barrelItemStacks and return the ItemStack 
+	 * We check if it"s in @barrelItemStacks and return the ItemStack 
 	 */
 	public ItemStack getStackInSlot(int i) {
         return i >= 0 && i < this.barrelItemStacks.length ? this.barrelItemStacks[i] : null;
@@ -107,19 +107,6 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
 
 	public void closeChest() {}
 
-	/** 
-	 * I have no idea what going on here... Just copy-past the BrewingStand source code 
-	 
-	@Override
-	public int getStartInventorySide(ForgeDirection side) {
-		return (side == ForgeDirection.UP ? 3 : 0);
-	}
-
-	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
-		return (side == ForgeDirection.UP ? 1 : 3);
-	}
-	*/
 	@Override
     public void readFromNBT(NBTTagCompound tagCompound) {
             super.readFromNBT(tagCompound);

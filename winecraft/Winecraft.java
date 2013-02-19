@@ -97,7 +97,7 @@ public class Winecraft {
             	.setTextureFile(CommonProxy.BLOCK_PNG)
             	.setCreativeTab(CreativeTabs.tabBlock);
             
-	            //LanguageRegistry.addName(barrelBlock, "Barrel");
+	            LanguageRegistry.addName(barrelBlock, "Barrel");
 	            GameRegistry.registerBlock(barrelBlock, "Barrel");
                 
 	            
