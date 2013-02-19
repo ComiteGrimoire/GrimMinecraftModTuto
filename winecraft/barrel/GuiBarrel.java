@@ -26,12 +26,17 @@ import net.minecraft.inventory.Container;
 
 public class GuiBarrel extends GuiContainer {
 	
+	TileEntityBarrel barrelTile;
+	
 	public GuiBarrel(InventoryPlayer inventoryPlayer, TileEntityBarrel tileEntity) {
 		super(new ContainerBarrel(inventoryPlayer, tileEntity));
+		this.barrelTile = tileEntity;
 	}
 	@Override
     protected void drawGuiContainerForegroundLayer(int param1, int param2) {
             fontRenderer.drawString("Barrel GUI", 8, 6, 4210752);
+            fontRenderer.drawString("Tick fermentation: " + this.barrelTile.barrelFermentationTime, 8, 60, 4210752);
+            fontRenderer.drawString(this.barrelTile.barrelGrapeLevel+"%", 8, 75, 4210752);
     }
 	
 	@Override

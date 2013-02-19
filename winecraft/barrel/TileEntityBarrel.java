@@ -17,6 +17,7 @@
 
 package tutorial.winecraft.barrel;
 
+import tutorial.winecraft.Winecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -33,9 +34,41 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
      */
     private ItemStack[] barrelItemStacks = new ItemStack[4];
     
-    public void updateEntity(){
 
+    /** The number of ticks that the current item has been fermenting for */
+    public int barrelFermentationTime = 0;
+    
+
+    /** The number of grape in the barrel */
+    public int barrelGrapeLevel = 0;
+    
+    
+    /**
+     * This function is call after each tick
+     */
+    public void updateEntity(){
         super.updateEntity();
+        
+        barrelFermentationTime++;
+        if( barrelItemStacks[0] !=null){
+        	if(barrelItemStacks[0].getItemName() == Winecraft.grapeFruit.getItemName()){
+            	barrelGrapeLevel += 25 * barrelItemStacks[0].stackSize;
+            	barrelItemStacks[0] = null;
+        	}
+
+        }
+        
+        if(barrelGrapeLevel >= 100){
+        	if(barrelItemStacks[1] != null && barrelItemStacks[1].getItemName() == Winecraft.wine.getItemName())
+        		barrelItemStacks[1].stackSize += (barrelGrapeLevel-(barrelGrapeLevel % 100))/100;
+        	else{
+        		barrelItemStacks[1] = new ItemStack(Winecraft.wine);
+        		barrelItemStacks[1].stackSize = (barrelGrapeLevel-(barrelGrapeLevel % 100))/100;
+        	}
+        	
+        	barrelGrapeLevel = barrelGrapeLevel % 100;
+        }
+        	
     }
     
 	@Override

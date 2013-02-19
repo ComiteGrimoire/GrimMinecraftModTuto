@@ -39,7 +39,7 @@ public class ContainerBarrel extends Container {
     	this.tileBarrel = tileBarrel;
     	//this.resultSlot = this.addSlotToContainer(new Slot(inventoryPlayer, 0, 79, 17));
     	addSlotToContainer(new Slot(tileBarrel, 0, 54, 34));
-    	addSlotToContainer(new Slot(tileBarrel, 0, 114, 34));
+    	addSlotToContainer(new Slot(tileBarrel, 1, 114, 34));
     	
     	bindPlayerInventory(inventoryPlayer);
     }
