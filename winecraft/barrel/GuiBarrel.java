@@ -34,9 +34,10 @@ public class GuiBarrel extends GuiContainer {
 	}
 	@Override
     protected void drawGuiContainerForegroundLayer(int param1, int param2) {
-            fontRenderer.drawString("Barrel GUI", 8, 6, 4210752);
-            fontRenderer.drawString("Tick fermentation: " + this.barrelTile.barrelFermentationTime, 8, 60, 4210752);
-            fontRenderer.drawString(this.barrelTile.barrelGrapeLevel+"%", 8, 75, 4210752);
+            fontRenderer.drawString("Barrel",  (width - xSize) / 4 + 15, 6, 4210752);
+            fontRenderer.drawString("Inventory",  8, this.ySize - 96 + 2, 4210752);
+            //fontRenderer.drawString("Ticks: " + this.barrelTile.barrelFermentationTime, 8, 60, 4210752);
+            fontRenderer.drawString(this.barrelTile.barrelGrapeLevel+"%", 8, 5, 4210752);
     }
 	
 	@Override
@@ -48,6 +49,16 @@ public class GuiBarrel extends GuiContainer {
         int x = (width - xSize) / 2 - 2;
         int y = (height - ySize) / 2;
         this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+        
+        int s = 40 - (int) (this.barrelTile.barrelGrapeLevel*0.4);
+        int p = (int) (this.barrelTile.barrelPressingTime*22/300);
+        int f = (int) (this.barrelTile.barrelFermentationTime*22/400);
+
+        this.drawTexturedModalRect(x + 72, y + 25, 200, 0, 24, 40); // Gray
+        this.drawTexturedModalRect(x + 72, y + 25 + s, 176, s, 24, 40 - s); // Green
+        
+        this.drawTexturedModalRect(x + 49, y + 35, 176, 40, p, 15); // Arrow Pressing
+        this.drawTexturedModalRect(x + 101, y + 35, 176, 40, f, 15); // Arrow fermentation
 	}
 	
 }

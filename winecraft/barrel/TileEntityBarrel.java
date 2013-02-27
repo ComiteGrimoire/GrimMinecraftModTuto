@@ -35,12 +35,17 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
     private ItemStack[] barrelItemStacks = new ItemStack[4];
     
 
-    /** The number of ticks that the current item has been fermenting for */
-    public int barrelFermentationTime = 0;
-    
-
     /** The number of grape in the barrel */
     public int barrelGrapeLevel = 0;
+    
+    /** Is it currently pressing grape */
+    public boolean barrelPressing = false;
+    
+    /** The number of ticks since a grape start to be press */
+    public int barrelPressingTime = 0;
+
+    /** The number of ticks that the current item has been fermenting for */
+    public int barrelFermentationTime = 0;
     
     
     /**
@@ -49,13 +54,14 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
     public void updateEntity(){
         super.updateEntity();
         
-        barrelFermentationTime++;
+        
+        
+        /**
         if( barrelItemStacks[0] !=null){
         	if(barrelItemStacks[0].getItemName() == Winecraft.grapeFruit.getItemName()){
             	barrelGrapeLevel += 25 * barrelItemStacks[0].stackSize;
             	barrelItemStacks[0] = null;
         	}
-
         }
         
         if(barrelGrapeLevel >= 100){
@@ -68,6 +74,41 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
         	
         	barrelGrapeLevel = barrelGrapeLevel % 100;
         }
+        */
+        
+        if(barrelGrapeLevel == 100){
+        	barrelFermentationTime++;
+        	if(barrelFermentationTime >= 400){
+        		if(barrelItemStacks[1] == null )
+        			barrelItemStacks[1] = new ItemStack(Winecraft.wine);
+        		else if(barrelItemStacks[1].getItemName() == Winecraft.wine.getItemName())
+        			barrelItemStacks[1].stackSize++;
+        		
+        		barrelFermentationTime = 0;
+        		barrelGrapeLevel = 0;
+        	}
+        }
+        	
+        
+        barrelPressing = (
+        		barrelItemStacks[0] !=null &&
+        		barrelItemStacks[0].getItemName() == Winecraft.grapeFruit.getItemName() &&
+        		barrelGrapeLevel < 100);
+        if(barrelPressing){
+        	barrelPressingTime++;
+        	if(barrelPressingTime >= 300){
+        		barrelPressingTime = 0;
+        		barrelGrapeLevel += 50;
+        		if(barrelItemStacks[0].stackSize > 1)
+        			barrelItemStacks[0].stackSize = barrelItemStacks[0].stackSize - 1;
+        		else
+        			barrelItemStacks[0] = null;
+        	}
+        }
+        else
+        	barrelPressingTime = 0;
+        	
+        	
         	
     }
     
