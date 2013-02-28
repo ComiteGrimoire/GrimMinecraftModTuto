@@ -20,6 +20,7 @@ package tutorial.winecraft;
 import tutorial.winecraft.barrel.BlockBarrel;
 import tutorial.winecraft.barrel.GuiBarrel;
 import tutorial.winecraft.barrel.TileEntityBarrel;
+import tutorial.winecraft.wine.WineItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -71,7 +72,7 @@ public class Winecraft {
 	    											.setItemName("seeds.grape")
 	    											.setTextureFile(CommonProxy.ITEMS_PNG);
 	    public static final Item grapeFruit = new WinecraftItem(5002);
-	    public static final Item wine = new WinecraftItem(5003).setItemName("drink.wine")
+	    public static final Item wine = new WineItem(5003, 2, false).setItemName("drink.wine")
 	    		.setIconIndex(1)
 	    		.setTextureFile(CommonProxy.ITEMS_PNG);
 	    
@@ -97,7 +98,6 @@ public class Winecraft {
             	.setTextureFile(CommonProxy.BLOCK_PNG)
             	.setCreativeTab(CreativeTabs.tabBlock);
             
-	            LanguageRegistry.addName(barrelBlock, "Barrel");
 	            GameRegistry.registerBlock(barrelBlock, "Barrel");
                 
 	            
@@ -105,23 +105,19 @@ public class Winecraft {
                 ItemStack grapes = new ItemStack(grapeFruit);
                 
                 // Add grape seed
-                LanguageRegistry.addName(grapeSeeds, "Grape Seeds");
                 MinecraftForge.addGrassSeed(new ItemStack(grapeSeeds), 10);
 
                 //Add grape fruits
-                LanguageRegistry.addName(grapeFruit, "Grape");
-                GameRegistry.addShapelessRecipe(new ItemStack(grapeSeeds, 4),
-                        new ItemStack(grapeFruit));
 
                 //Add grape crops
                 GameRegistry.registerBlock(grapeCrop, "GrapeCrop");
                 
                 //Add wine
-                LanguageRegistry.addName(wine, "Wine");
          
                 //Recipes go here
                 //Four grapes yield 1 wine
                 GameRegistry.addShapelessRecipe(new ItemStack(wine), grapes, grapes, grapes, grapes);
+                registerNames();
                 
                 proxy.registerRenderers();
         }
@@ -129,5 +125,34 @@ public class Winecraft {
         @PostInit
         public void postInit(FMLPostInitializationEvent event) {
                 // Stub Method
+        }
+        
+        /**
+         * Method to register names in the LanguageRegistry
+         */
+        private void registerNames()
+        {
+            LanguageRegistry.addName(barrelBlock, "Barrel");
+            LanguageRegistry.addName(grapeFruit, "Grape");
+            LanguageRegistry.addName(grapeSeeds, "Grape Seeds");
+            LanguageRegistry.addName(wine, "Wine");
+        }
+        
+        /**
+         * Method to register recipes in the CraftingManager
+         */
+        private void registerRecipes()
+        {
+        	//Variable declarations
+            ItemStack grapes = new ItemStack(grapeFruit);
+            
+        	//Shapeless recipes
+            GameRegistry.addShapelessRecipe(new ItemStack(grapeSeeds, 4), new ItemStack(grapeFruit));
+            
+            //Shaped recipes
+            
+            //Debug stuff
+            //Four grapes yield 1 wine
+            GameRegistry.addShapelessRecipe(new ItemStack(wine), grapes, grapes, grapes, grapes);
         }
 }
