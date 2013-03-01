@@ -32,7 +32,6 @@ public class GuiHandler implements IGuiHandler {
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
             TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
             if(tileEntity instanceof TileEntityBarrel){
-                	System.out.println("GUI HANDLER READ CONTAINER");
                     return new ContainerBarrel(player.inventory, (TileEntityBarrel) tileEntity);
             }
             return null;
@@ -43,7 +42,6 @@ public class GuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
             TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
             if(tileEntity instanceof TileEntityBarrel){
-                	System.out.println("GUI HANDLER READ GUI");
                     return new GuiBarrel(player.inventory, (TileEntityBarrel) tileEntity);
             }
             return null;

@@ -18,11 +18,14 @@
 package tutorial.winecraft.barrel;
 
 import tutorial.winecraft.Winecraft;
+import tutorial.winecraft.wine.WineItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
@@ -54,38 +57,25 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
     public void updateEntity(){
         super.updateEntity();
         
-        
-        
-        /**
-        if( barrelItemStacks[0] !=null){
-        	if(barrelItemStacks[0].getItemName() == Winecraft.grapeFruit.getItemName()){
-            	barrelGrapeLevel += 25 * barrelItemStacks[0].stackSize;
-            	barrelItemStacks[0] = null;
-        	}
-        }
-        
-        if(barrelGrapeLevel >= 100){
-        	if(barrelItemStacks[1] != null && barrelItemStacks[1].getItemName() == Winecraft.wine.getItemName())
-        		barrelItemStacks[1].stackSize += (barrelGrapeLevel-(barrelGrapeLevel % 100))/100;
-        	else{
-        		barrelItemStacks[1] = new ItemStack(Winecraft.wine);
-        		barrelItemStacks[1].stackSize = (barrelGrapeLevel-(barrelGrapeLevel % 100))/100;
-        	}
-        	
-        	barrelGrapeLevel = barrelGrapeLevel % 100;
-        }
-        */
-        
         if(barrelGrapeLevel == 100){
         	barrelFermentationTime++;
         	if(barrelFermentationTime >= 400){
-        		if(barrelItemStacks[1] == null )
-        			barrelItemStacks[1] = new ItemStack(Winecraft.wine);
-        		else if(barrelItemStacks[1].getItemName() == Winecraft.wine.getItemName())
-        			barrelItemStacks[1].stackSize++;
-        		
         		barrelFermentationTime = 0;
         		barrelGrapeLevel = 0;
+        		WineItem brew = (WineItem) Winecraft.wine;
+        		
+        		if(Math.random() > 0.7)
+        			brew.setFoodEffect(new PotionEffect(Potion.confusion.getId(),200,10));
+        		else
+        			brew.setFoodEffect(new PotionEffect(Potion.hunger.getId(),200,10));
+        			
+        		if(barrelItemStacks[1] == null )
+        			barrelItemStacks[1] = new ItemStack(brew);
+        		else if(barrelItemStacks[1].getItemName() == Winecraft.wine.getItemName()){
+        			int s = barrelItemStacks[1].stackSize + 1;
+        			barrelItemStacks[1] = new ItemStack(brew);
+        			barrelItemStacks[1].stackSize = s;
+        		}
         	}
         }
         	
@@ -99,6 +89,7 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
         	if(barrelPressingTime >= 300){
         		barrelPressingTime = 0;
         		barrelGrapeLevel += 50;
+        		barrelGrapeLevel = barrelGrapeLevel > 100 ? 100 : barrelGrapeLevel;
         		if(barrelItemStacks[0].stackSize > 1)
         			barrelItemStacks[0].stackSize = barrelItemStacks[0].stackSize - 1;
         		else
