@@ -57,11 +57,11 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
     public void updateEntity(){
         super.updateEntity();
         
-        if(barrelGrapeLevel == 100){
-        	barrelFermentationTime++;
-        	if(barrelFermentationTime >= 400){
-        		barrelFermentationTime = 0;
-        		barrelGrapeLevel = 0;
+        if(this.barrelGrapeLevel == 100){
+        	this.barrelFermentationTime++;
+        	if(this.barrelFermentationTime >= 400){
+        		this.barrelFermentationTime = 0;
+        		this.barrelGrapeLevel = 0;
         		WineItem brew = (WineItem) Winecraft.wine;
         		
         		if(Math.random() > 0.7)
@@ -69,38 +69,35 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
         		else
         			brew.setFoodEffect(new PotionEffect(Potion.hunger.getId(),200,10));
         			
-        		if(barrelItemStacks[1] == null )
-        			barrelItemStacks[1] = new ItemStack(brew);
-        		else if(barrelItemStacks[1].getItemName() == Winecraft.wine.getItemName()){
-        			int s = barrelItemStacks[1].stackSize + 1;
-        			barrelItemStacks[1] = new ItemStack(brew);
-        			barrelItemStacks[1].stackSize = s;
+        		if(this.barrelItemStacks[1] == null )
+        			this.barrelItemStacks[1] = new ItemStack(brew);
+        		else if(this.barrelItemStacks[1].getItemName() == Winecraft.wine.getItemName()){
+        			int s = this.barrelItemStacks[1].stackSize + 1;
+        			this.barrelItemStacks[1] = new ItemStack(brew);
+        			this.barrelItemStacks[1].stackSize = s;
         		}
         	}
         }
         	
         
-        barrelPressing = (
-        		barrelItemStacks[0] !=null &&
-        		barrelItemStacks[0].getItemName() == Winecraft.grapeFruit.getItemName() &&
-        		barrelGrapeLevel < 100);
-        if(barrelPressing){
-        	barrelPressingTime++;
-        	if(barrelPressingTime >= 300){
-        		barrelPressingTime = 0;
-        		barrelGrapeLevel += 50;
-        		barrelGrapeLevel = barrelGrapeLevel > 100 ? 100 : barrelGrapeLevel;
-        		if(barrelItemStacks[0].stackSize > 1)
-        			barrelItemStacks[0].stackSize = barrelItemStacks[0].stackSize - 1;
+        this.barrelPressing = (
+        		this.barrelItemStacks[0] !=null &&
+        		this.barrelItemStacks[0].getItemName() == Winecraft.grapeFruit.getItemName() &&
+        		this.barrelGrapeLevel < 100);
+        if(this.barrelPressing){
+        	this.barrelPressingTime++;
+        	if(this.barrelPressingTime >= 300){
+        		this.barrelPressingTime = 0;
+        		this.barrelGrapeLevel += 50;
+        		this.barrelGrapeLevel = this.barrelGrapeLevel > 100 ? 100 :this. barrelGrapeLevel;
+        		if(this.barrelItemStacks[0].stackSize > 1)
+        			this.barrelItemStacks[0].stackSize = this.barrelItemStacks[0].stackSize - 1;
         		else
-        			barrelItemStacks[0] = null;
+        			this.barrelItemStacks[0] = null;
         	}
         }
         else
-        	barrelPressingTime = 0;
-        	
-        	
-        	
+        	this.barrelPressingTime = 0;
     }
     
 	@Override
@@ -180,8 +177,8 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
             for (int i = 0; i < tagList.tagCount(); i++) {
                     NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(i);
                     byte slot = tag.getByte("Slot");
-                    if (slot >= 0 && slot < barrelItemStacks.length) {
-                    	barrelItemStacks[slot] = ItemStack.loadItemStackFromNBT(tag);
+                    if (slot >= 0 && slot < this.barrelItemStacks.length) {
+                    	this.barrelItemStacks[slot] = ItemStack.loadItemStackFromNBT(tag);
                     }
             }
     }
@@ -191,8 +188,8 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
             super.writeToNBT(tagCompound);
                            
             NBTTagList itemList = new NBTTagList();
-            for (int i = 0; i < barrelItemStacks.length; i++) {
-                    ItemStack stack = barrelItemStacks[i];
+            for (int i = 0; i < this.barrelItemStacks.length; i++) {
+                    ItemStack stack = this.barrelItemStacks[i];
                     if (stack != null) {
                             NBTTagCompound tag = new NBTTagCompound();
                             tag.setByte("Slot", (byte) i);

@@ -17,6 +17,8 @@
 
 package tutorial.winecraft.barrel;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -26,18 +28,24 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerBarrel extends Container {
-	private TileEntityBarrel tileBarrel;
+	private TileEntityBarrel barrel;
 
-    /** Instance of Slot. */
-    //private final Slot resultSlot;
+    /** The number of grape in the barrel */
+    public int lastGrapeLevel = 0;
+    
+    /** The number of ticks since a grape start to be press */
+    public int lastPressingTime = 0;
+
+    /** The number of ticks that the current item has been fermenting for */
+    public int lastFermentationTime = 0;
     
     /** 
      * By the way, the default parameters of the Slot object are 
      * Slot(IInventory inventory, int slotIndex, int xDisplayPosition, int yDisplayPosition)
      */
     public ContainerBarrel(InventoryPlayer inventoryPlayer, TileEntityBarrel tileBarrel){
-    	this.tileBarrel = tileBarrel;
-    	//this.resultSlot = this.addSlotToContainer(new Slot(inventoryPlayer, 0, 79, 17));
+    	this.barrel = tileBarrel;
+
     	addSlotToContainer(new Slot(tileBarrel, 0, 23, 34));
     	addSlotToContainer(new Slot(tileBarrel, 1, 135, 34));
     	
@@ -60,21 +68,68 @@ public class ContainerBarrel extends Container {
     }
 
 	
-	public void addCraftingToCrafters(ICrafting par1ICrafting){
+    public void addCraftingToCrafters(ICrafting par1ICrafting)
+    {
         super.addCraftingToCrafters(par1ICrafting);
-        // Need to add something to increment the progress bar here
+        par1ICrafting.sendProgressBarUpdate(this, 0, this.barrel.barrelGrapeLevel);
+        par1ICrafting.sendProgressBarUpdate(this, 1, this.barrel.barrelPressingTime);
+        par1ICrafting.sendProgressBarUpdate(this, 2, this.barrel.barrelFermentationTime);
     }
-	
-	/**
-	 *  Need to edit that for multiplayer
-	 */
-	public void detectAndSendChanges(){
-	      super.detectAndSendChanges();
-	}
+
+    /**
+     * Looks for changes made in the container, sends them to every listener.
+     */
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+
+        for (int var1 = 0; var1 < this.crafters.size(); ++var1)
+        {
+            ICrafting var2 = (ICrafting)this.crafters.get(var1);
+
+            if (this.lastGrapeLevel != this.barrel.barrelGrapeLevel)
+            {
+                var2.sendProgressBarUpdate(this, 0, this.barrel.barrelGrapeLevel);
+            }
+
+            if (this.lastPressingTime != this.barrel.barrelPressingTime)
+            {
+                var2.sendProgressBarUpdate(this, 1, this.barrel.barrelPressingTime);
+            }
+
+            if (this.lastFermentationTime != this.barrel.barrelFermentationTime)
+            {
+                var2.sendProgressBarUpdate(this, 2, this.barrel.barrelFermentationTime);
+            }
+        }
+
+        this.lastGrapeLevel = this.barrel.barrelGrapeLevel;
+        this.lastPressingTime = this.barrel.barrelPressingTime;
+        this.lastFermentationTime = this.barrel.barrelFermentationTime;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int par1, int par2)
+    {
+        if (par1 == 0)
+        {
+            this.barrel.barrelGrapeLevel = par2;
+        }
+
+        if (par1 == 1)
+        {
+            this.barrel.barrelPressingTime = par2;
+        }
+
+        if (par1 == 2)
+        {
+            this.barrel.barrelFermentationTime = par2;
+        }
+    }
 	 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return this.tileBarrel.isUseableByPlayer(player);
+		return this.barrel.isUseableByPlayer(player);
 	}
 	
 	/** 
