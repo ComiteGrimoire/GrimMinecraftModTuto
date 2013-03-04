@@ -172,7 +172,7 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
 	@Override
     public void readFromNBT(NBTTagCompound tagCompound) {
             super.readFromNBT(tagCompound);
-           
+
             NBTTagList tagList = tagCompound.getTagList("Inventory");
             for (int i = 0; i < tagList.tagCount(); i++) {
                     NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(i);
@@ -181,11 +181,17 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
                     	this.barrelItemStacks[slot] = ItemStack.loadItemStackFromNBT(tag);
                     }
             }
+            this.barrelPressingTime = tagCompound.getShort("PressTime");
+            this.barrelGrapeLevel = tagCompound.getShort("GrapeLvl");
+            this.barrelFermentationTime = tagCompound.getShort("FermTime");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
             super.writeToNBT(tagCompound);
+            tagCompound.setShort("PressTime", (short)this.barrelPressingTime);
+            tagCompound.setShort("GrapeLvl", (short)this.barrelGrapeLevel);
+            tagCompound.setShort("FermTime", (short)this.barrelFermentationTime);
                            
             NBTTagList itemList = new NBTTagList();
             for (int i = 0; i < this.barrelItemStacks.length; i++) {

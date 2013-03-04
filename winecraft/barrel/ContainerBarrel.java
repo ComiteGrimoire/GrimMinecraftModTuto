@@ -83,17 +83,14 @@ public class ContainerBarrel extends Container {
     {
         super.detectAndSendChanges();
 
-        for (int var1 = 0; var1 < this.crafters.size(); ++var1)
-        {
-            ICrafting var2 = (ICrafting)this.crafters.get(var1);
+        for (int i = 0; i < this.crafters.size(); i++){
+            ICrafting var2 = (ICrafting)this.crafters.get(i);
 
-            if (this.lastGrapeLevel != this.barrel.barrelGrapeLevel)
-            {
+            if (this.lastGrapeLevel != this.barrel.barrelGrapeLevel){
                 var2.sendProgressBarUpdate(this, 0, this.barrel.barrelGrapeLevel);
             }
 
-            if (this.lastPressingTime != this.barrel.barrelPressingTime)
-            {
+            if (this.lastPressingTime != this.barrel.barrelPressingTime){
                 var2.sendProgressBarUpdate(this, 1, this.barrel.barrelPressingTime);
             }
 
@@ -109,21 +106,15 @@ public class ContainerBarrel extends Container {
     }
 
     @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int par1, int par2)
-    {
-        if (par1 == 0)
-        {
-            this.barrel.barrelGrapeLevel = par2;
+    public void updateProgressBar(int id, int value){
+        if (id == 0){
+            this.barrel.barrelGrapeLevel = value;
         }
-
-        if (par1 == 1)
-        {
-            this.barrel.barrelPressingTime = par2;
+        else if (id == 1){
+            this.barrel.barrelPressingTime = value;
         }
-
-        if (par1 == 2)
-        {
-            this.barrel.barrelFermentationTime = par2;
+        else if (id == 2){
+            this.barrel.barrelFermentationTime = value;
         }
     }
 	 
