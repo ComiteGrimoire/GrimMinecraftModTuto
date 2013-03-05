@@ -17,9 +17,11 @@
 
 package tutorial.winecraft;
 
-import tutorial.winecraft.barrel.BlockBarrel;
+import tutorial.winecraft.barrel.BarrelBlock;
 import tutorial.winecraft.barrel.GuiBarrel;
 import tutorial.winecraft.barrel.TileEntityBarrel;
+import tutorial.winecraft.vineyard.TileEntityVineyard;
+import tutorial.winecraft.vineyard.VineyardBlock;
 import tutorial.winecraft.wine.WineItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -31,6 +33,7 @@ import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.src.ModLoader;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -64,7 +67,8 @@ public class Winecraft {
 
     
 		public static final Block grapeCrop = new GrapeCrop(504);
-		public static final Block barrelBlock = new BlockBarrel(505, Material.iron);
+		public static final Block barrelBlock = new BarrelBlock(505, Material.iron);
+		public static final Block wineyardABlock = new VineyardBlock(506, Material.wood).setCreativeTab(CreativeTabs.tabBlock);
 		public static final ItemSeeds grapeSeeds = (ItemSeeds) new ItemSeeds(5001,
 	            									grapeCrop.blockID, 
 	            									Block.tilledField.blockID)
@@ -99,7 +103,9 @@ public class Winecraft {
             	.setCreativeTab(CreativeTabs.tabBlock);
             
 	            GameRegistry.registerBlock(barrelBlock, "Barrel");
-                
+	            GameRegistry.registerBlock(wineyardABlock, "Wineyard Delimiter A");
+	            
+	            TileEntity.addMapping(TileEntityVineyard.class, "collector");
 	            
                 //Variable declarations
                 ItemStack grapes = new ItemStack(grapeFruit);
@@ -107,16 +113,9 @@ public class Winecraft {
                 // Add grape seed
                 MinecraftForge.addGrassSeed(new ItemStack(grapeSeeds), 10);
 
-                //Add grape fruits
-
                 //Add grape crops
                 GameRegistry.registerBlock(grapeCrop, "GrapeCrop");
                 
-                //Add wine
-         
-                //Recipes go here
-                //Four grapes yield 1 wine
-                GameRegistry.addShapelessRecipe(new ItemStack(wine), grapes, grapes, grapes, grapes);
                 registerNames();
                 
                 proxy.registerRenderers();
@@ -132,6 +131,7 @@ public class Winecraft {
          */
         private void registerNames()
         {
+            LanguageRegistry.addName(wineyardABlock, "Wineyard Delimiter A");
             LanguageRegistry.addName(barrelBlock, "Barrel");
             LanguageRegistry.addName(grapeFruit, "Grape");
             LanguageRegistry.addName(grapeSeeds, "Grape Seeds");

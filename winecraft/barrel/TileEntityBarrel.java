@@ -30,7 +30,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 
-public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISidedInventory*/{
+public class TileEntityBarrel extends TileEntity  implements IInventory{
 
     /** 
      * Hold the currently placed items in the slots of the barrel 
@@ -39,19 +39,19 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
     
 
     /** The number of grape in the barrel */
-    public int barrelGrapeLevel = 0;
+    private int barrelGrapeLevel = 0;
     
     /** Is it currently pressing grape */
-    public boolean barrelPressing = false;
+    private boolean barrelPressing = false;
     
     /** The number of ticks since a grape start to be press */
-    public int barrelPressingTime = 0;
+    private int barrelPressingTime = 0;
 
     /** The number of ticks that the current item has been fermenting for */
-    public int barrelFermentationTime = 0;
+    private int barrelFermentationTime = 0;
     
-    
-    /**
+
+	/**
      * This function is call after each tick
      */
     public void updateEntity(){
@@ -106,7 +106,7 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
 	}
 
 	/** 
-	 * We check if it"s in @barrelItemStacks and return the ItemStack 
+	 * We check if it's in @barrelItemStacks and return the ItemStack 
 	 */
 	public ItemStack getStackInSlot(int i) {
         return i >= 0 && i < this.barrelItemStacks.length ? this.barrelItemStacks[i] : null;
@@ -205,4 +205,29 @@ public class TileEntityBarrel extends TileEntity  implements IInventory/**, ISid
             }
             tagCompound.setTag("Inventory", itemList);
     }
+    
+    
+    public int getBarrelGrapeLevel() {
+		return barrelGrapeLevel;
+	}
+
+	public void setBarrelGrapeLevel(int barrelGrapeLevel) {
+		this.barrelGrapeLevel = barrelGrapeLevel;
+	}
+
+	public int getBarrelPressingTime() {
+		return barrelPressingTime;
+	}
+
+	public void setBarrelPressingTime(int barrelPressingTime) {
+		this.barrelPressingTime = barrelPressingTime;
+	}
+
+	public int getBarrelFermentationTime() {
+		return barrelFermentationTime;
+	}
+
+	public void setBarrelFermentationTime(int barrelFermentationTime) {
+		this.barrelFermentationTime = barrelFermentationTime;
+	}
 }

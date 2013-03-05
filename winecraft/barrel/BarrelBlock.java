@@ -37,9 +37,9 @@ import tutorial.winecraft.BasicBlock;
 import tutorial.winecraft.CommonProxy;
 import tutorial.winecraft.Winecraft;
 
-public class BlockBarrel extends BlockContainer{
+public class BarrelBlock extends BlockContainer{
 	
-	public BlockBarrel(int id, Material material){
+	public BarrelBlock(int id, Material material){
 		super(id, material);
 		this.blockIndexInTexture = 3;
 	}

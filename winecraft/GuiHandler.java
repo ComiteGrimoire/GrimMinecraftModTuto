@@ -20,6 +20,9 @@ package tutorial.winecraft;
 import tutorial.winecraft.barrel.ContainerBarrel;
 import tutorial.winecraft.barrel.GuiBarrel;
 import tutorial.winecraft.barrel.TileEntityBarrel;
+import tutorial.winecraft.vineyard.ContainerVineyard;
+import tutorial.winecraft.vineyard.GuiVineyard;
+import tutorial.winecraft.vineyard.TileEntityVineyard;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,6 +37,9 @@ public class GuiHandler implements IGuiHandler {
             if(tileEntity instanceof TileEntityBarrel){
                     return new ContainerBarrel(player.inventory, (TileEntityBarrel) tileEntity);
             }
+            if(tileEntity instanceof TileEntityVineyard){
+                return new ContainerVineyard(player.inventory, (TileEntityVineyard) tileEntity);
+            }
             return null;
     }
 
@@ -43,6 +49,9 @@ public class GuiHandler implements IGuiHandler {
             TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
             if(tileEntity instanceof TileEntityBarrel){
                     return new GuiBarrel(player.inventory, (TileEntityBarrel) tileEntity);
+            }
+            if(tileEntity instanceof TileEntityVineyard){
+                return new GuiVineyard(player.inventory, (TileEntityVineyard) tileEntity);
             }
             return null;
 
