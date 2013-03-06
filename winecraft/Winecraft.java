@@ -68,7 +68,7 @@ public class Winecraft {
     
 		public static final Block grapeCrop = new GrapeCrop(504);
 		public static final Block barrelBlock = new BarrelBlock(505, Material.iron);
-		public static final Block wineyardABlock = new VineyardBlock(506, Material.wood).setCreativeTab(CreativeTabs.tabBlock);
+		public static final Block vineyardBlock = new VineyardBlock(506, Material.wood).setCreativeTab(CreativeTabs.tabBlock);
 		public static final ItemSeeds grapeSeeds = (ItemSeeds) new ItemSeeds(5001,
 	            									grapeCrop.blockID, 
 	            									Block.tilledField.blockID)
@@ -98,12 +98,17 @@ public class Winecraft {
                 
                 GameRegistry.registerTileEntity(TileEntityBarrel.class, "TileEntityBarrel");
                 
+                // Adding recipe
+	            TileEntityBarrel.addRecipe(300, 400, 2, this.grapeFruit, this.wine);
+	            TileEntityBarrel.addRecipe(30, 40, 6, Item.appleRed, this.wine);
+                
                 barrelBlock
             	.setTextureFile(CommonProxy.BLOCK_PNG)
             	.setCreativeTab(CreativeTabs.tabBlock);
             
 	            GameRegistry.registerBlock(barrelBlock, "Barrel");
-	            GameRegistry.registerBlock(wineyardABlock, "Wineyard Delimiter A");
+	            GameRegistry.registerBlock(vineyardBlock, "Vineyard Delimiter");
+	            
 	            
 	            TileEntity.addMapping(TileEntityVineyard.class, "collector");
 	            
@@ -129,9 +134,8 @@ public class Winecraft {
         /**
          * Method to register names in the LanguageRegistry
          */
-        private void registerNames()
-        {
-            LanguageRegistry.addName(wineyardABlock, "Wineyard Delimiter A");
+        private void registerNames(){
+            LanguageRegistry.addName(vineyardBlock, "Vineyard Delimiter");
             LanguageRegistry.addName(barrelBlock, "Barrel");
             LanguageRegistry.addName(grapeFruit, "Grape");
             LanguageRegistry.addName(grapeSeeds, "Grape Seeds");
@@ -141,18 +145,6 @@ public class Winecraft {
         /**
          * Method to register recipes in the CraftingManager
          */
-        private void registerRecipes()
-        {
-        	//Variable declarations
-            ItemStack grapes = new ItemStack(grapeFruit);
-            
-        	//Shapeless recipes
-            GameRegistry.addShapelessRecipe(new ItemStack(grapeSeeds, 4), new ItemStack(grapeFruit));
-            
-            //Shaped recipes
-            
-            //Debug stuff
-            //Four grapes yield 1 wine
-            GameRegistry.addShapelessRecipe(new ItemStack(wine), grapes, grapes, grapes, grapes);
+        private void registerRecipes(){
         }
 }

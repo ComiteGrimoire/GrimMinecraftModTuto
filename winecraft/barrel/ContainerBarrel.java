@@ -38,6 +38,9 @@ public class ContainerBarrel extends Container {
 
     /** The number of ticks that the current item has been fermenting for */
 	private int lastFermentationTime = 0;
+	
+    /** The id of the current recipe */
+    private int lastCurrentRecipeId = -1;
     
     /** 
      * By the way, the default parameters of the Slot object are 
@@ -74,6 +77,7 @@ public class ContainerBarrel extends Container {
         par1ICrafting.sendProgressBarUpdate(this, 0, this.barrel.getBarrelGrapeLevel());
         par1ICrafting.sendProgressBarUpdate(this, 1, this.barrel.getBarrelPressingTime());
         par1ICrafting.sendProgressBarUpdate(this, 2, this.barrel.getBarrelFermentationTime());
+        par1ICrafting.sendProgressBarUpdate(this, 3, this.barrel.getBarrelCurrentRecipeId());
     }
 
     /**
@@ -94,15 +98,19 @@ public class ContainerBarrel extends Container {
                 var2.sendProgressBarUpdate(this, 1, this.barrel.getBarrelPressingTime());
             }
 
-            if (this.lastFermentationTime != this.barrel.getBarrelFermentationTime())
-            {
+            if (this.lastFermentationTime != this.barrel.getBarrelFermentationTime()){
                 var2.sendProgressBarUpdate(this, 2, this.barrel.getBarrelFermentationTime());
+            }
+
+            if (this.lastCurrentRecipeId != this.barrel.getBarrelCurrentRecipeId()){
+                var2.sendProgressBarUpdate(this, 3, this.barrel.getBarrelCurrentRecipeId());
             }
         }
 
         this.lastGrapeLevel = this.barrel.getBarrelGrapeLevel();
         this.lastPressingTime = this.barrel.getBarrelPressingTime();
         this.lastFermentationTime = this.barrel.getBarrelFermentationTime();
+        this.lastCurrentRecipeId = this.barrel.getBarrelCurrentRecipeId();
     }
 
     @SideOnly(Side.CLIENT)
@@ -115,6 +123,9 @@ public class ContainerBarrel extends Container {
         }
         else if (id == 2){
             this.barrel.setBarrelFermentationTime(value);
+        }
+        else if (id == 3){
+            this.barrel.setBarrelCurrentRecipeId(value);
         }
     }
 	 

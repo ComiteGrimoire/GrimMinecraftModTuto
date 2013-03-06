@@ -51,8 +51,8 @@ public class GuiBarrel extends GuiContainer {
         this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
         
         int s = 40 - (int) (this.barrelTile.getBarrelGrapeLevel()*0.4);
-        int p = (int) (this.barrelTile.getBarrelPressingTime()*22/300);
-        int f = (int) (this.barrelTile.getBarrelFermentationTime()*22/400);
+        int p = (int) (this.barrelTile.getBarrelPressingTime()*22/this.barrelTile.getCurrentRecipe().pressingTime);
+        int f = (int) (this.barrelTile.getBarrelFermentationTime()*22/this.barrelTile.getCurrentRecipe().fermentationTime);
 
         this.drawTexturedModalRect(x + 72, y + 25, 200, 0, 24, 40); // Gray
         this.drawTexturedModalRect(x + 72, y + 25 + s, 176, s, 24, 40 - s); // Green

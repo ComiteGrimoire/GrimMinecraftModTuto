@@ -17,10 +17,13 @@
 
 package tutorial.winecraft.barrel;
 
+import java.util.ArrayList;
+
 import tutorial.winecraft.Winecraft;
 import tutorial.winecraft.wine.WineItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -30,12 +33,33 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 
-public class TileEntityBarrel extends TileEntity  implements IInventory{
 
+public class TileEntityBarrel extends TileEntity  implements IInventory{
+	public class Recipe {
+		int pressingTime = 1;
+		int fermentationTime = 1;
+		int nbrFillBarrel = 1;
+		Item in;
+		Item out;
+		
+		Recipe(){}
+		Recipe(int pressingTime, int fermentationTime,	int nbrFillBarrel, Item in, Item out){
+			this.pressingTime = pressingTime;
+			this.fermentationTime = fermentationTime;
+			this.nbrFillBarrel = nbrFillBarrel;
+			this.in = in;
+			this.out = out;
+		}
+	}
     /** 
      * Hold the currently placed items in the slots of the barrel 
      */
     private ItemStack[] barrelItemStacks = new ItemStack[4];
+    
+    /**
+     * Hold add the recipe
+     */
+    static private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
     
 
     /** The number of grape in the barrel */
@@ -50,19 +74,42 @@ public class TileEntityBarrel extends TileEntity  implements IInventory{
     /** The number of ticks that the current item has been fermenting for */
     private int barrelFermentationTime = 0;
     
+    /** The id of the current recipe */
+    private int barrelCurrentRecipeId = -1;
+    
 
+
+	static public void addRecipe(int pressingTime, int fermentationTime,	int nbrFillBarrel, Item in, Item out){
+    	/** 
+    	 * We need an instance of the current class before creating an instance of the inner class
+    	 * yeah it's horrible..
+    	*/
+    	TileEntityBarrel wtf_im_doing = new TileEntityBarrel();
+    	recipes.add(wtf_im_doing.new Recipe(pressingTime, fermentationTime,	nbrFillBarrel, in, out));
+    }
+    
 	/**
      * This function is call after each tick
      */
     public void updateEntity(){
         super.updateEntity();
         
+        if(this.barrelCurrentRecipeId == -1){
+        	if(this.barrelItemStacks[0] != null){
+        		for(int h = 0; h < recipes.size(); h++){
+        			if(this.barrelItemStacks[0].getItem() == recipes.get(h).in)
+        				this.barrelCurrentRecipeId = h;
+        		}
+        	}
+        }
+        
         if(this.barrelGrapeLevel == 100){
         	this.barrelFermentationTime++;
-        	if(this.barrelFermentationTime >= 400){
+        	if(this.barrelFermentationTime >= recipes.get(barrelCurrentRecipeId).fermentationTime){
         		this.barrelFermentationTime = 0;
         		this.barrelGrapeLevel = 0;
-        		WineItem brew = (WineItem) Winecraft.wine;
+        		WineItem brew = (WineItem) recipes.get(barrelCurrentRecipeId).out;
+        		this.barrelCurrentRecipeId = -1;
         		
         		if(Math.random() > 0.7)
         			brew.setFoodEffect(new PotionEffect(Potion.confusion.getId(),200,10));
@@ -71,24 +118,26 @@ public class TileEntityBarrel extends TileEntity  implements IInventory{
         			
         		if(this.barrelItemStacks[1] == null )
         			this.barrelItemStacks[1] = new ItemStack(brew);
-        		else if(this.barrelItemStacks[1].getItemName() == Winecraft.wine.getItemName()){
+        		else if(this.barrelItemStacks[1].getItemName() == brew.getItemName()){
         			int s = this.barrelItemStacks[1].stackSize + 1;
         			this.barrelItemStacks[1] = new ItemStack(brew);
         			this.barrelItemStacks[1].stackSize = s;
         		}
+        		
         	}
         }
         	
         
         this.barrelPressing = (
         		this.barrelItemStacks[0] !=null &&
-        		this.barrelItemStacks[0].getItemName() == Winecraft.grapeFruit.getItemName() &&
+        		this.barrelCurrentRecipeId != -1 &&
         		this.barrelGrapeLevel < 100);
         if(this.barrelPressing){
+        	Recipe r = recipes.get(barrelCurrentRecipeId);
         	this.barrelPressingTime++;
-        	if(this.barrelPressingTime >= 300){
+        	if(this.barrelPressingTime >= r.pressingTime){
         		this.barrelPressingTime = 0;
-        		this.barrelGrapeLevel += 50;
+        		this.barrelGrapeLevel += 100 / r.nbrFillBarrel;
         		this.barrelGrapeLevel = this.barrelGrapeLevel > 100 ? 100 :this. barrelGrapeLevel;
         		if(this.barrelItemStacks[0].stackSize > 1)
         			this.barrelItemStacks[0].stackSize = this.barrelItemStacks[0].stackSize - 1;
@@ -184,6 +233,7 @@ public class TileEntityBarrel extends TileEntity  implements IInventory{
             this.barrelPressingTime = tagCompound.getShort("PressTime");
             this.barrelGrapeLevel = tagCompound.getShort("GrapeLvl");
             this.barrelFermentationTime = tagCompound.getShort("FermTime");
+            this.barrelCurrentRecipeId = tagCompound.getShort("RecipeId");
     }
 
     @Override
@@ -192,6 +242,7 @@ public class TileEntityBarrel extends TileEntity  implements IInventory{
             tagCompound.setShort("PressTime", (short)this.barrelPressingTime);
             tagCompound.setShort("GrapeLvl", (short)this.barrelGrapeLevel);
             tagCompound.setShort("FermTime", (short)this.barrelFermentationTime);
+            tagCompound.setShort("RecipeId", (short)this.barrelCurrentRecipeId);
                            
             NBTTagList itemList = new NBTTagList();
             for (int i = 0; i < this.barrelItemStacks.length; i++) {
@@ -229,5 +280,20 @@ public class TileEntityBarrel extends TileEntity  implements IInventory{
 
 	public void setBarrelFermentationTime(int barrelFermentationTime) {
 		this.barrelFermentationTime = barrelFermentationTime;
+	}
+
+    public Recipe getCurrentRecipe() {
+    	if( barrelCurrentRecipeId != -1)
+    		return recipes.get(barrelCurrentRecipeId);
+    	else
+    		return new Recipe();
+	}
+    
+    public int getBarrelCurrentRecipeId() {
+		return barrelCurrentRecipeId;
+	}
+
+	public void setBarrelCurrentRecipeId(int barrelCurrentRecipeId) {
+		this.barrelCurrentRecipeId = barrelCurrentRecipeId;
 	}
 }
