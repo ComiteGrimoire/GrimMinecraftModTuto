@@ -47,7 +47,8 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 return 0;
 	 }
 	 
-	 public void buildFences(){
+	 public void buildFences(World world){
+		 world.setBlock(this.xCoord - 1, this.yCoord, this.zCoord, 4);
 		 if(this.vineyardItemStacks[0] != null && this.vineyardItemStacks[0].getDisplayName() != "Fence"){
 			 if(this.vineyardItemStacks[0].stackSize >= Math.abs(offsetX*offsetY) - (Math.abs(offsetX) - 1)*(Math.abs(offsetY) - 1) - 1){
 				 error = "Not enough fences";

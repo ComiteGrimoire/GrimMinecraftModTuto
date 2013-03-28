@@ -19,6 +19,12 @@ package tutorial.winecraft.vineyard;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.FMLClientHandler;
+
+import tutorial.winecraft.CommonProxy;
+import tutorial.winecraft.client.ClientProxy;
+import tutorial.winecraft.network.WinecraftPacket;
+
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -81,7 +87,9 @@ public class GuiVineyard extends GuiContainer {
 	                tile.subOffsetY();
                     break;
 	            case 5:
-	            	tile.buildFences();
+	            	//tile.buildFences();
+	            	WinecraftPacket packet = new WinecraftPacket( 22,tile.xCoord, tile.yCoord, tile.zCoord, new int[0]);
+	            	FMLClientHandler.instance().getClient().getSendQueue().addToSendQueue(packet.getPacket());
             }
     }
 }

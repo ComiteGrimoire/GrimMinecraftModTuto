@@ -22,6 +22,7 @@ import tutorial.winecraft.barrel.GuiBarrel;
 import tutorial.winecraft.barrel.TileEntityBarrel;
 import tutorial.winecraft.vineyard.TileEntityVineyard;
 import tutorial.winecraft.vineyard.VineyardBlock;
+import tutorial.winecraft.vineyard.network.*;
 import tutorial.winecraft.wine.WineItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -58,7 +59,8 @@ clientPacketHandlerSpec =
 @SidedPacketHandler(channels = {"TutorialMod" }, packetHandler = ClientPacketHandler.class),
 serverPacketHandlerSpec =
 @SidedPacketHandler(channels = {"TutorialMod" }, packetHandler = ServerPacketHandler.class))*/
-@NetworkMod(clientSideRequired=true, serverSideRequired=false)
+//@NetworkMod(clientSideRequired=true, serverSideRequired=false)
+@NetworkMod(channels = { "Winecraft" }, packetHandler = PacketHandlerVineyard.class, clientSideRequired = true, serverSideRequired = true)
 public class Winecraft {
     	@Instance("Winecraft")
     	public static Winecraft instance;
