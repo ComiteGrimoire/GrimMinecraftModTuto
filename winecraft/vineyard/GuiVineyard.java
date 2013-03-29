@@ -45,7 +45,7 @@ public class GuiVineyard extends GuiContainer {
             fontRenderer.drawString("Vineyard",  (width - xSize) / 4 + 30, 6, 4210752);
             fontRenderer.drawString(tile.getErrorMessage(),  (width - xSize) / 4 + 30, 30, 4210752);
             fontRenderer.drawString("X: " + tile.getOffsetX(), 5, 18, 4210752);
-            fontRenderer.drawString("Y: " + tile.getOffsetY(), 5, 38, 4210752);
+            fontRenderer.drawString("Z: " + tile.getOffsetZ(), 5, 38, 4210752);
     }
 	
 	@Override
@@ -81,10 +81,10 @@ public class GuiVineyard extends GuiContainer {
                     tile.subOffsetX();
                     break;
 	            case 3:
-                    tile.addOffsetY();
+                    tile.addOffsetZ();
                     break;
 	            case 4:
-	                tile.subOffsetY();
+	                tile.subOffsetZ();
                     break;
 	            case 5:
 	            	//tile.buildFences();
