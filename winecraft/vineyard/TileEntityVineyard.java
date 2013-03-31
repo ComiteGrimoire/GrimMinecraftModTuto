@@ -44,7 +44,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	 }
 
 	 /**
-	  * A block is empty if it's a flower(37 and 38), a mushroom(39), grass or air(0)
+	  * A block is empty if it's a flower(37 and 38), a mushroom(39), grass(31) or air(0)
 	  */
 	 public boolean isFencable(int id){
 		if(id == 0 || id == 31 || id == 37 || id == 38 || id == 39)
@@ -53,17 +53,19 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 			return false;
 	 }
 	 
-	 public int putFence(World world, int x, int y, int z){
+	 public int putFence(World world, int x, int y, int z, boolean isADoor){
+		 int idBlock = isADoor ?  107 : 85;
+		 
 		 if(!isFencable(world.getBlockId(x, y - 1, z)) && isFencable(world.getBlockId(x, y, z))){
-			 world.setBlock(x, y, z, 85);
+			 world.setBlock(x, y, z, idBlock);
 			 return y;
 		 }
 		 else if(!isFencable(world.getBlockId(x, y - 2, z)) && isFencable(world.getBlockId(x, y - 1, z))){
-			 world.setBlock(x, y-1, z, 85);
+			 world.setBlock(x, y-1, z, idBlock);
 			 return y - 1;
 		 }
 		 else if(!isFencable(world.getBlockId(x, y, z)) && isFencable(world.getBlockId(x, y + 1, z))){
-			 world.setBlock(x, y+1, z, 85);
+			 world.setBlock(x, y+1, z, idBlock);
 			 return y + 1;
 		 }
 		 else{
@@ -80,16 +82,17 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 			 }
 			 int y = this.yCoord;
 			 for(int i = 1; Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
-				 y = putFence(world, this.xCoord + i, y, this.zCoord);
+				 y = putFence(world, this.xCoord + i, y, this.zCoord, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
+				 
 			 }
 			 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
-				 y = putFence(world, this.xCoord + this.offsetX, y, this.zCoord + k);
+				 y = putFence(world, this.xCoord + this.offsetX, y, this.zCoord + k, false);
 			 }
 			 for(int i = 0; Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
-				 y = putFence(world, this.xCoord + this.offsetX - i, y, this.zCoord + this.offsetZ);
+				 y = putFence(world, this.xCoord + this.offsetX - i, y, this.zCoord + this.offsetZ, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
 			 }
 			 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
-				 y = putFence(world, this.xCoord, y, this.zCoord + this.offsetZ - k);
+				 y = putFence(world, this.xCoord, y, this.zCoord + this.offsetZ - k, false);
 			 }
 		 }
 		 else{
