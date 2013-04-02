@@ -44,7 +44,7 @@ public class PacketHandlerVineyard implements IPacketHandler {
 				// We convert Player (the Network instance) to EntityPlayer (the usable instance)
 				TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(p.posX, p.posY, p.posZ);
 				if (tile instanceof TileEntityVineyard) {
-					((TileEntityVineyard) tile).buildFences(((EntityPlayer) player).worldObj);// packet.payload.intPayload[0]);
+					((TileEntityVineyard) tile).buildFences(((EntityPlayer) player).worldObj, p.payload[0], p.payload[1]);
 				}
 			}
 		} catch (Exception ex) {

@@ -88,7 +88,10 @@ public class GuiVineyard extends GuiContainer {
                     break;
 	            case 5:
 	            	//tile.buildFences();
-	            	WinecraftPacket packet = new WinecraftPacket( 22,tile.xCoord, tile.yCoord, tile.zCoord, new int[0]);
+	            	int[] payload = new int[2];
+	            	payload[0] = tile.getOffsetX();
+	    	        payload[1] = tile.getOffsetZ();
+	            	WinecraftPacket packet = new WinecraftPacket( 22,tile.xCoord, tile.yCoord, tile.zCoord, payload);
 	            	FMLClientHandler.instance().getClient().getSendQueue().addToSendQueue(packet.getPacket());
             }
     }

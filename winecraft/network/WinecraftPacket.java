@@ -26,7 +26,6 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
 public class WinecraftPacket {
-	protected boolean isChunkDataPacket = false;
 	protected String channel = "Winecraft";
 
 	private int id;
@@ -52,6 +51,7 @@ public class WinecraftPacket {
 	}
 	
 	public Packet getPacket() {
+		
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream data = new DataOutputStream(bytes);
 		try {
@@ -60,11 +60,12 @@ public class WinecraftPacket {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		Packet250CustomPayload packet = new Packet250CustomPayload();
 		packet.channel = channel;
 		packet.data = bytes.toByteArray();
 		packet.length = packet.data.length;
-		packet.isChunkDataPacket = this.isChunkDataPacket;
+		
 		return packet;
 	}
 

@@ -27,14 +27,13 @@ import net.minecraft.world.World;
 
 public class TileEntityVineyard extends TileEntity implements IInventory {
 
-    /** 
-     * Hold the fences
-     */
+    /** Hold the fences */
     private ItemStack[] vineyardItemStacks = new ItemStack[1];
 	
 	private boolean vineyardDelimited = false;	
 	
 	private int offsetX = 5;
+	private int offsetY = 0;
 	private int offsetZ = 5;
 	
 	private String error = "";
@@ -54,8 +53,10 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	 }
 	 
 	 public int putFence(World world, int x, int y, int z, boolean isADoor){
+		 /** 107 = fence door ; 85 = fence */
 		 int idBlock = isADoor ?  107 : 85;
 		 
+		 /** We check if the block under where we want to put a fence is empty. */
 		 if(!isFencable(world.getBlockId(x, y - 1, z)) && isFencable(world.getBlockId(x, y, z))){
 			 world.setBlock(x, y, z, idBlock);
 			 return y;
@@ -69,30 +70,60 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 			 return y + 1;
 		 }
 		 else{
-			 return y; // Error
+			 /** ThIt's impossible to build a continuous fence  */
+			 return 0;
 		 }
 	 }
 	 
-	 public void buildFences(World world){
+	 public void buildFences(World world, int offsetX, int offsetZ){
+		 this.offsetX = offsetX;
+		 this.offsetZ = offsetZ;
+		 
 		 if(this.vineyardItemStacks[0] != null && this.vineyardItemStacks[0].getDisplayName() != "Fence"){
 			 if(this.vineyardItemStacks[0].stackSize < Math.abs(offsetX)*2 + (Math.abs(offsetZ) - 2)*2 - 1){
 				 error = "Not enough fences";
-				 System.out.println("Not enough fences");
+				 System.out.println("Not enough fences ("+this.vineyardItemStacks[0].stackSize + ") " + (Math.abs(offsetX)*2 + (Math.abs(offsetZ) - 2)*2 - 1) + " " + offsetX + " " + offsetZ);
 				 return;
 			 }
 			 int y = this.yCoord;
-			 for(int i = 1; Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
+			 this.offsetY = 0;
+			 
+			 /** Generate the first "x" (east-west) side */
+			 for(int i = (offsetX > 0 ? 1: -1); Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
+				 /** If this the middle block of the row, we put a door here */
 				 y = putFence(world, this.xCoord + i, y, this.zCoord, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
-				 
+				 if(y == 0)
+					 return;
+				 if(y - this.yCoord > this.offsetY)
+					 this.offsetY = y - this.yCoord ;
 			 }
+
+			 /** Generate the first "z" (north-south) side */
 			 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
 				 y = putFence(world, this.xCoord + this.offsetX, y, this.zCoord + k, false);
+				 if(y == 0)
+					 return;
+				 if(y - this.yCoord > this.offsetY)
+					 this.offsetY = y - this.yCoord ;
 			 }
+			 
+			 /** Generate the second "x" (east-west) side */
 			 for(int i = 0; Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
+				 /** If this the middle block of the row, we put a door here */
 				 y = putFence(world, this.xCoord + this.offsetX - i, y, this.zCoord + this.offsetZ, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
+				 if(y == 0)
+					 return;
+				 if(y - this.yCoord > this.offsetY)
+					 this.offsetY = y - this.yCoord ;
 			 }
+			 
+			 /** Generate the first "z" (north-south) side */
 			 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
 				 y = putFence(world, this.xCoord, y, this.zCoord + this.offsetZ - k, false);
+				 if(y == 0)
+					 return;
+				 if(y - this.yCoord > this.offsetY)
+					 this.offsetY = y - this.yCoord ;
 			 }
 		 }
 		 else{
