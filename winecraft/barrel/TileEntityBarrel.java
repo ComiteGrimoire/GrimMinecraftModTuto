@@ -18,7 +18,6 @@
 package tutorial.winecraft.barrel;
 
 import java.util.ArrayList;
-
 import tutorial.winecraft.Winecraft;
 import tutorial.winecraft.wine.WineItem;
 import net.minecraft.entity.player.EntityPlayer;
