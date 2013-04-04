@@ -21,45 +21,114 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class TileEntityVineyard extends TileEntity implements IInventory {
 
-    /** 
-     * Hold the fences
-     */
+    /** Hold the fences */
     private ItemStack[] vineyardItemStacks = new ItemStack[1];
 	
 	private boolean vineyardDelimited = false;	
 	
 	private int offsetX = 5;
-	private int offsetY = 5;
-	private int offsetZ = 0;
+	private int offsetY = 0;
+	private int offsetZ = 5;
 	
 	private String error = "";
 	
 	 public TileEntityVineyard(){
 		 super();
 	 }
-	 
-	 public int putFence( double x, double y, double z){
-		 return 0;
+
+	 /**
+	  * A block is empty if it's a flower(37 and 38), a mushroom(39), grass(31) or air(0)
+	  */
+	 public boolean isFencable(int id){
+		if(id == 0 || id == 31 || id == 37 || id == 38 || id == 39)
+			return true;
+		else
+			return false;
 	 }
 	 
-	 public void buildFences(){
+	 public int putFence(World world, int x, int y, int z, boolean isADoor){
+		 /** 107 = fence door ; 85 = fence */
+		 int idBlock = isADoor ?  107 : 85;
+		 
+		 /** We check if the block under where we want to put a fence is empty. */
+		 if(!isFencable(world.getBlockId(x, y - 1, z)) && isFencable(world.getBlockId(x, y, z))){
+			 world.setBlock(x, y, z, idBlock);
+			 return y;
+		 }
+		 else if(!isFencable(world.getBlockId(x, y - 2, z)) && isFencable(world.getBlockId(x, y - 1, z))){
+			 world.setBlock(x, y-1, z, idBlock);
+			 return y - 1;
+		 }
+		 else if(!isFencable(world.getBlockId(x, y, z)) && isFencable(world.getBlockId(x, y + 1, z))){
+			 world.setBlock(x, y+1, z, idBlock);
+			 return y + 1;
+		 }
+		 else{
+			 /** ThIt's impossible to build a continuous fence  */
+			 return 0;
+		 }
+	 }
+	 
+	 public void buildFences(World world, int offsetX, int offsetZ){
+		 this.offsetX = offsetX;
+		 this.offsetZ = offsetZ;
+		 
 		 if(this.vineyardItemStacks[0] != null && this.vineyardItemStacks[0].getDisplayName() != "Fence"){
-			 if(this.vineyardItemStacks[0].stackSize >= Math.abs(offsetX*offsetY) - (Math.abs(offsetX) - 1)*(Math.abs(offsetY) - 1) - 1){
+			 if(this.vineyardItemStacks[0].stackSize < Math.abs(offsetX)*2 + (Math.abs(offsetZ) - 2)*2 - 1){
 				 error = "Not enough fences";
+				 System.out.println("Not enough fences ("+this.vineyardItemStacks[0].stackSize + ") " + (Math.abs(offsetX)*2 + (Math.abs(offsetZ) - 2)*2 - 1) + " " + offsetX + " " + offsetZ);
 				 return;
 			 }
-			 int z = this.zCoord;
+			 int y = this.yCoord;
+			 this.offsetY = 0;
+			 
+			 /** Generate the first "x" (east-west) side */
+			 for(int i = (offsetX > 0 ? 1: -1); Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
+				 /** If this the middle block of the row, we put a door here */
+				 y = putFence(world, this.xCoord + i, y, this.zCoord, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
+				 if(y == 0)
+					 return;
+				 if(y - this.yCoord > this.offsetY)
+					 this.offsetY = y - this.yCoord ;
+			 }
+
+			 /** Generate the first "z" (north-south) side */
+			 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
+				 y = putFence(world, this.xCoord + this.offsetX, y, this.zCoord + k, false);
+				 if(y == 0)
+					 return;
+				 if(y - this.yCoord > this.offsetY)
+					 this.offsetY = y - this.yCoord ;
+			 }
+			 
+			 /** Generate the second "x" (east-west) side */
 			 for(int i = 0; Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
-				 putFence(this.xCoord + i, this.yCoord, z);
+				 /** If this the middle block of the row, we put a door here */
+				 y = putFence(world, this.xCoord + this.offsetX - i, y, this.zCoord + this.offsetZ, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
+				 if(y == 0)
+					 return;
+				 if(y - this.yCoord > this.offsetY)
+					 this.offsetY = y - this.yCoord ;
+			 }
+			 
+			 /** Generate the first "z" (north-south) side */
+			 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
+				 y = putFence(world, this.xCoord, y, this.zCoord + this.offsetZ - k, false);
+				 if(y == 0)
+					 return;
+				 if(y - this.yCoord > this.offsetY)
+					 this.offsetY = y - this.yCoord ;
 			 }
 		 }
 		 else{
 			 error = "You need to put fences";
+			 System.out.println("You need to put fences");
 		 }
 	 }
 	 
@@ -88,14 +157,39 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 
 	
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound){
-		super.readFromNBT(par1NBTTagCompound);
-	}
+    public void readFromNBT(NBTTagCompound tagCompound) {
+            super.readFromNBT(tagCompound);
+
+            NBTTagList tagList = tagCompound.getTagList("Inventory");
+            for (int i = 0; i < tagList.tagCount(); i++) {
+                    NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(i);
+                    byte slot = tag.getByte("Slot");
+                    if (slot >= 0 && slot < this.vineyardItemStacks.length) {
+                    	this.vineyardItemStacks[slot] = ItemStack.loadItemStackFromNBT(tag);
+                    }
+            }
+            this.offsetX = tagCompound.getShort("offsetX");
+            this.offsetZ = tagCompound.getShort("offsetZ");
+    }
 
     @Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound){
-		super.writeToNBT(par1NBTTagCompound);
-	}
+    public void writeToNBT(NBTTagCompound tagCompound) {
+            super.writeToNBT(tagCompound);
+            tagCompound.setShort("offsetX", (short)this.offsetX);
+            tagCompound.setShort("offsetZ", (short)this.offsetZ);
+                           
+            NBTTagList itemList = new NBTTagList();
+            for (int i = 0; i < this.vineyardItemStacks.length; i++) {
+                    ItemStack stack = this.vineyardItemStacks[i];
+                    if (stack != null) {
+                            NBTTagCompound tag = new NBTTagCompound();
+                            tag.setByte("Slot", (byte) i);
+                            stack.writeToNBT(tag);
+                            itemList.appendTag(tag);
+                    }
+            }
+            tagCompound.setTag("Inventory", itemList);
+    }
 
     @Override
 	public int getSizeInventory() {
@@ -168,29 +262,16 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 			this.offsetX--;
 	}
 
-	public int getOffsetY() {
-		return offsetY;
-	}
-
-	public void addOffsetY() {
-		if(!vineyardDelimited && this.offsetX < 30)
-			this.offsetY++;
-	}
-	public void subOffsetY() {
-		if(!vineyardDelimited && this.offsetX > -30)
-			this.offsetY--;
-	}
-
 	public int getOffsetZ() {
 		return offsetZ;
 	}
 
 	public void addOffsetZ() {
-		if(!vineyardDelimited)
+		if(!vineyardDelimited && this.offsetZ < 30)
 			this.offsetZ++;
 	}
 	public void subOffsetZ() {
-		if(!vineyardDelimited)
+		if(!vineyardDelimited && this.offsetZ > -30)
 			this.offsetZ--;
 	}
 	public String getErrorMessage(){

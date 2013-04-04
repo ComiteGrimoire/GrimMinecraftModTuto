@@ -19,6 +19,12 @@ package tutorial.winecraft.vineyard;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.FMLClientHandler;
+
+import tutorial.winecraft.CommonProxy;
+import tutorial.winecraft.client.ClientProxy;
+import tutorial.winecraft.network.WinecraftPacket;
+
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -39,7 +45,7 @@ public class GuiVineyard extends GuiContainer {
             fontRenderer.drawString("Vineyard",  (width - xSize) / 4 + 30, 6, 4210752);
             fontRenderer.drawString(tile.getErrorMessage(),  (width - xSize) / 4 + 30, 30, 4210752);
             fontRenderer.drawString("X: " + tile.getOffsetX(), 5, 18, 4210752);
-            fontRenderer.drawString("Y: " + tile.getOffsetY(), 5, 38, 4210752);
+            fontRenderer.drawString("Z: " + tile.getOffsetZ(), 5, 38, 4210752);
     }
 	
 	@Override
@@ -75,13 +81,18 @@ public class GuiVineyard extends GuiContainer {
                     tile.subOffsetX();
                     break;
 	            case 3:
-                    tile.addOffsetY();
+                    tile.addOffsetZ();
                     break;
 	            case 4:
-	                tile.subOffsetY();
+	                tile.subOffsetZ();
                     break;
 	            case 5:
-	            	tile.buildFences();
+	            	//tile.buildFences();
+	            	int[] payload = new int[2];
+	            	payload[0] = tile.getOffsetX();
+	    	        payload[1] = tile.getOffsetZ();
+	            	WinecraftPacket packet = new WinecraftPacket( 22,tile.xCoord, tile.yCoord, tile.zCoord, payload);
+	            	FMLClientHandler.instance().getClient().getSendQueue().addToSendQueue(packet.getPacket());
             }
     }
 }

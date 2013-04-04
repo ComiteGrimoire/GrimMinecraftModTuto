@@ -22,6 +22,7 @@ import tutorial.winecraft.barrel.GuiBarrel;
 import tutorial.winecraft.barrel.TileEntityBarrel;
 import tutorial.winecraft.vineyard.TileEntityVineyard;
 import tutorial.winecraft.vineyard.VineyardBlock;
+import tutorial.winecraft.vineyard.network.*;
 import tutorial.winecraft.wine.WineItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -58,7 +59,7 @@ clientPacketHandlerSpec =
 @SidedPacketHandler(channels = {"TutorialMod" }, packetHandler = ClientPacketHandler.class),
 serverPacketHandlerSpec =
 @SidedPacketHandler(channels = {"TutorialMod" }, packetHandler = ServerPacketHandler.class))*/
-@NetworkMod(clientSideRequired=true, serverSideRequired=false)
+@NetworkMod(channels = { "Winecraft" }, packetHandler = PacketHandlerVineyard.class, clientSideRequired = true, serverSideRequired = true)
 public class Winecraft {
     	@Instance("Winecraft")
     	public static Winecraft instance;
@@ -100,14 +101,16 @@ public class Winecraft {
                 
                 // Adding recipe
 	            TileEntityBarrel.addRecipe(300, 400, 2, this.grapeFruit, this.wine);
-	            TileEntityBarrel.addRecipe(30, 40, 6, Item.appleRed, this.wine);
+	            TileEntityBarrel.addRecipe(30, 40, 6, Item.appleRed, this.wine); //debug
                 
                 barrelBlock
             	.setTextureFile(CommonProxy.BLOCK_PNG)
             	.setCreativeTab(CreativeTabs.tabBlock);
             
 	            GameRegistry.registerBlock(barrelBlock, "Barrel");
+	            barrelBlock.setBlockName("Barrel");
 	            GameRegistry.registerBlock(vineyardBlock, "Vineyard Delimiter");
+	            vineyardBlock.setBlockName("Vineyard Delimiter");
 	            
 	            
 	            TileEntity.addMapping(TileEntityVineyard.class, "collector");
