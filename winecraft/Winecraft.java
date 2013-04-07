@@ -149,5 +149,13 @@ public class Winecraft {
          * Method to register recipes in the CraftingManager
          */
         private void registerRecipes(){
+        	//Shaped Recipes
+        	//Barrel
+        	GameRegistry.addShapedRecipe(new ItemStack(barrelBlock), 
+        								"xxx", 
+        								"xyx", 
+        								"xxx",
+        								'x', new ItemStack(Block.planks), 
+        								'y', new ItemStack(grapeFruit));
         }
 }
