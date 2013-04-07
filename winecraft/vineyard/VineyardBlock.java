@@ -17,6 +17,8 @@
 
 package tutorial.winecraft.vineyard;
 
+import java.util.Random;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import tutorial.winecraft.CommonProxy;
@@ -39,7 +41,6 @@ public class VineyardBlock extends BlockContainer{
 	public VineyardBlock(int id, Material material) {
 		super(id, 4, material);
 		this.blockIndexInTexture = 4;
-
 	}
 	
 	public void onBlockAdded(World par1World, int par2, int par3, int par4){

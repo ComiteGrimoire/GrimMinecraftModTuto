@@ -31,7 +31,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
     private ItemStack[] vineyardItemStacks = new ItemStack[1];
 	
 	private boolean vineyardDelimited = false;	
-	
+
 	private int offsetX = 5;
 	private int offsetY = 0;
 	private int offsetZ = 5;
@@ -70,7 +70,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 			 return y + 1;
 		 }
 		 else{
-			 /** ThIt's impossible to build a continuous fence  */
+			 /** It's impossible to build a continuous fence  */
 			 return 0;
 		 }
 	 }
@@ -86,7 +86,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 				 return;
 			 }
 			 int y = this.yCoord;
-			 this.offsetY = 0;
+			 int maxY = 0, minY = 0;
 			 
 			 /** Generate the first "x" (east-west) side */
 			 for(int i = (offsetX > 0 ? 1: -1); Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
@@ -94,8 +94,10 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 				 y = putFence(world, this.xCoord + i, y, this.zCoord, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
 				 if(y == 0)
 					 return;
-				 if(y - this.yCoord > this.offsetY)
-					 this.offsetY = y - this.yCoord ;
+				 if(y - this.yCoord > maxY)
+					 maxY = y - this.yCoord ;
+				 if(y - this.yCoord < minY)
+					 minY = y - this.yCoord ;
 			 }
 
 			 /** Generate the first "z" (north-south) side */
@@ -103,18 +105,22 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 				 y = putFence(world, this.xCoord + this.offsetX, y, this.zCoord + k, false);
 				 if(y == 0)
 					 return;
-				 if(y - this.yCoord > this.offsetY)
-					 this.offsetY = y - this.yCoord ;
+				 if(y - this.yCoord > maxY)
+					 maxY = y - this.yCoord ;
+				 if(y - this.yCoord < minY)
+					 minY = y - this.yCoord ;
 			 }
 			 
 			 /** Generate the second "x" (east-west) side */
 			 for(int i = 0; Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
 				 /** If this the middle block of the row, we put a door here */
-				 y = putFence(world, this.xCoord + this.offsetX - i, y, this.zCoord + this.offsetZ, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
+				 y = putFence(world, this.xCoord + this.offsetX - i, y, this.zCoord + this.offsetZ, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2 ) - 1);
 				 if(y == 0)
 					 return;
-				 if(y - this.yCoord > this.offsetY)
-					 this.offsetY = y - this.yCoord ;
+				 if(y - this.yCoord > maxY)
+					 maxY = y - this.yCoord ;
+				 if(y - this.yCoord < minY)
+					 minY = y - this.yCoord ;
 			 }
 			 
 			 /** Generate the first "z" (north-south) side */
@@ -122,9 +128,18 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 				 y = putFence(world, this.xCoord, y, this.zCoord + this.offsetZ - k, false);
 				 if(y == 0)
 					 return;
-				 if(y - this.yCoord > this.offsetY)
-					 this.offsetY = y - this.yCoord ;
+				 if(y - this.yCoord > maxY)
+					 maxY = y - this.yCoord ;
+				 if(y - this.yCoord < minY)
+					 minY = y - this.yCoord ;
 			 }
+			 
+			 if(Math.abs(minY) > maxY)
+				 this.offsetY = minY;
+			 else
+				 this.offsetY = maxY;
+			 
+			 this.vineyardDelimited = true;
 		 }
 		 else{
 			 error = "You need to put fences";
@@ -137,6 +152,17 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
      */
     public void updateEntity(){
         super.updateEntity();
+        
+		if(this.isVineyardDelimited() && !worldObj.isRemote){
+			this.setVineyardDelimited(true);
+			 for(int i = (this.getOffsetX() > 0 ? 1: -1); Math.abs(i) < Math.abs(this.getOffsetX()); i += (this.getOffsetX() > 0 ? 1: -1)){
+				 for(int j = 0; Math.abs(j) <= Math.abs(this.offsetY); j += (this.offsetY > 0 ? 1: -1)){
+					 for(int k = (this.getOffsetZ() > 0 ? 1: -1); Math.abs(k) < Math.abs(this.getOffsetZ()); k += (this.getOffsetZ() > 0 ? 1: -1)){
+						 worldObj.setBlock(this.xCoord + i, this.yCoord + j, this.zCoord + k, 5);
+					 }
+				}
+			 }
+        }
     }
     
     /** 
@@ -265,6 +291,10 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	public int getOffsetZ() {
 		return offsetZ;
 	}
+	
+	public int getOffsetY() {
+		return offsetY;
+	}
 
 	public void addOffsetZ() {
 		if(!vineyardDelimited && this.offsetZ < 30)
@@ -280,5 +310,9 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 
 	public boolean isVineyardDelimited() {
 		return vineyardDelimited;
+	}
+	
+	public void setVineyardDelimited(boolean vineyardDelimited) {
+		this.vineyardDelimited = vineyardDelimited;
 	}
 }

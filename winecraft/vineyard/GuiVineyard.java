@@ -42,10 +42,13 @@ public class GuiVineyard extends GuiContainer {
 	}
 	@Override
     protected void drawGuiContainerForegroundLayer(int param1, int param2) {
-            fontRenderer.drawString("Vineyard",  (width - xSize) / 4 + 30, 6, 4210752);
-            fontRenderer.drawString(tile.getErrorMessage(),  (width - xSize) / 4 + 30, 30, 4210752);
+            fontRenderer.drawString("Vineyard",  90, 6, 4210752);
+            fontRenderer.drawString(tile.getErrorMessage(),  90, 30, 4210752);
             fontRenderer.drawString("X: " + tile.getOffsetX(), 5, 18, 4210752);
             fontRenderer.drawString("Z: " + tile.getOffsetZ(), 5, 38, 4210752);
+            
+            int perimetre = Math.abs(tile.getOffsetX())*2 + (Math.abs(tile.getOffsetZ()) - 2)*2 - 1;
+            fontRenderer.drawString("Need " + perimetre + " fences", 90, 18, 4210752);
     }
 	
 	@Override
@@ -63,13 +66,15 @@ public class GuiVineyard extends GuiContainer {
     public void initGui() {
             super.initGui();
             int xw = 150;
-            controlList.add(new GuiButton(1, xw + 15, 45, 15, 20, "+"));
-            controlList.add(new GuiButton(2, xw + 35, 45, 15, 20, "-"));
+            int x = (width - xSize) / 2 - 2;
+            int y = (height - ySize) / 2;// 27 - 35
+            controlList.add(new GuiButton(1, x + 42, y + 10, 15, 20, "+")); // 15 45
+            controlList.add(new GuiButton(2, x + 62, y + 10, 15, 20, "-"));
             
-            controlList.add(new GuiButton(3, xw + 15, 72, 15, 20, "+"));
-            controlList.add(new GuiButton(4, xw + 35, 72, 15, 20, "-"));
+            controlList.add(new GuiButton(3, x + 42, y + 37, 15, 20, "+"));
+            controlList.add(new GuiButton(4, x + 62, y + 37, 15, 20, "-"));
             
-            controlList.add(new GuiButton(5, xw + 50, 95, 40, 20, "Build"));
+            controlList.add(new GuiButton(5, x + 77, y + 60, 40, 20, "Build"));
     }
 	
     protected void actionPerformed(GuiButton guibutton) {
