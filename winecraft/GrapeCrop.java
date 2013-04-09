@@ -19,20 +19,27 @@ package tutorial.winecraft;
 
 import java.util.Random;
 
+import tutorial.winecraft.barrel.TileEntityBarrel;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-public class GrapeCrop extends BasicBlock {
-
-	//Constructeur
+public class GrapeCrop extends BlockContainer {
+	
     public GrapeCrop (int id) {
         super(id, 32, Material.plants);
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.5F, 1.0F);
         setTickRandomly(true);
     }
+    
+	public TileEntity createNewTileEntity(World var1){
+        return new TileEntityGrapeCrop();
+	}
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool (World world, int x,
@@ -64,7 +71,7 @@ public class GrapeCrop extends BasicBlock {
      * Is called every Minecraft Tick (20 times/second.)
      */
     @Override
-    public void updateTick (World world, int x, int y, int z, Random random) {
+    public void updateTick(World world, int x, int y, int z, Random random) {
         if (world.getBlockMetadata(x, y, z) == 1) {
             return;
         }
@@ -77,7 +84,7 @@ public class GrapeCrop extends BasicBlock {
     }
 
     @Override
-    public void onNeighborBlockChange (World world, int x, int y, int z,
+    public void onNeighborBlockChange(World world, int x, int y, int z,
             int neighborId) {
         if (!canBlockStay(world, x, y, z)) {
             dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
@@ -86,7 +93,7 @@ public class GrapeCrop extends BasicBlock {
     }
 
     @Override
-    public boolean canBlockStay (World world, int x, int y, int z) {
+    public boolean canBlockStay(World world, int x, int y, int z) {
         Block soil = blocksList[world.getBlockId(x, y - 1, z)];
         return (world.getFullBlockLightValue(x, y, z) >= 8 || world
                 .canBlockSeeTheSky(x, y, z))
@@ -98,20 +105,25 @@ public class GrapeCrop extends BasicBlock {
      * Decide what to drop when destroy
      */
     @Override
-    public int idDropped (int metadata, Random random, int par2) {
-        switch (metadata) {
+    public int idDropped(int metadata, Random random, int par2) {
+        
+    	switch (metadata) {
         case 0:
             return Winecraft.grapeSeeds.itemID;
         case 1:
             return Winecraft.grapeFruit.itemID;
         default:
-            // Error case!
             return -1; // air
         }
     }
 
     @Override
-    public int idPicked (World world, int x, int y, int z) {
+    public int idPicked(World world, int x, int y, int z) {
         return Winecraft.grapeSeeds.itemID;
+    }
+	
+	@Override
+    public String getTextureFile () {
+            return CommonProxy.BLOCK_PNG;
     }
 }

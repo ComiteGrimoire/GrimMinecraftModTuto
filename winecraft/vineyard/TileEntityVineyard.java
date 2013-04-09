@@ -17,6 +17,7 @@
 
 package tutorial.winecraft.vineyard;
 
+import tutorial.winecraft.TileEntityGrapeCrop;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -35,7 +36,8 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	private int offsetX = 5;
 	private int offsetY = 0;
 	private int offsetZ = 5;
-	
+	private int angle = 0;
+
 	private String error = "";
 	
 	 public TileEntityVineyard(){
@@ -140,6 +142,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 				 this.offsetY = maxY;
 			 
 			 this.vineyardDelimited = true;
+			 updateAngle();
 		 }
 		 else{
 			 error = "You need to put fences";
@@ -154,11 +157,21 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
         super.updateEntity();
         
 		if(this.isVineyardDelimited() && !worldObj.isRemote){
-			this.setVineyardDelimited(true);
+			//this.setVineyardDelimited(true);
+			TileEntity t;
 			 for(int i = (this.getOffsetX() > 0 ? 1: -1); Math.abs(i) < Math.abs(this.getOffsetX()); i += (this.getOffsetX() > 0 ? 1: -1)){
 				 for(int j = 0; Math.abs(j) <= Math.abs(this.offsetY); j += (this.offsetY > 0 ? 1: -1)){
 					 for(int k = (this.getOffsetZ() > 0 ? 1: -1); Math.abs(k) < Math.abs(this.getOffsetZ()); k += (this.getOffsetZ() > 0 ? 1: -1)){
-						 worldObj.setBlock(this.xCoord + i, this.yCoord + j, this.zCoord + k, 5);
+						 //worldObj.setBlock(this.xCoord + i, this.yCoord + j, this.zCoord + k, 5);
+						 t = (worldObj.getBlockTileEntity(this.xCoord + i, this.yCoord + j, this.zCoord + k));
+						 if(worldObj.getBlockId(this.xCoord + i, this.yCoord + j, this.zCoord + k) == 504 && t instanceof TileEntityGrapeCrop){
+							 //worldObj.setBlock(this.xCoord + i, this.yCoord + j, this.zCoord + k, 5);
+							 if(!(((TileEntityGrapeCrop) t).isInVineyard())){
+								 ((TileEntityGrapeCrop) t).setInVineyard(true);
+								 ((TileEntityGrapeCrop) t).setAngle(angle);
+									System.out.println("x y z "+ this.offsetY);
+							 }
+						 }
 					 }
 				}
 			 }
@@ -314,5 +327,17 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	
 	public void setVineyardDelimited(boolean vineyardDelimited) {
 		this.vineyardDelimited = vineyardDelimited;
+	}
+	
+	public void updateAngle(){
+		angle = (int) (180/Math.PI* Math.atan(this.offsetY/Math.sqrt(this.offsetX*this.offsetX + this.offsetZ*this.offsetZ)));
+	}
+	
+	public int getAngle() {
+		return angle;
+	}
+
+	public void setAngle(int angle) {
+		this.angle = angle;
 	}
 }

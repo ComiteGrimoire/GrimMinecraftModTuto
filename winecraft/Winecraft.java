@@ -98,6 +98,8 @@ public class Winecraft {
                 NetworkRegistry.instance().registerGuiHandler(this, guiHandler);
                 
                 GameRegistry.registerTileEntity(TileEntityBarrel.class, "TileEntityBarrel");
+                GameRegistry.registerTileEntity(TileEntityVineyard.class, "TileEntityVineyard");
+                GameRegistry.registerTileEntity(TileEntityGrapeCrop.class, "TileEntityGrapeCrop");
                 
                 // Adding recipe
 	            TileEntityBarrel.addRecipe(300, 400, 2, this.grapeFruit, this.wine);
