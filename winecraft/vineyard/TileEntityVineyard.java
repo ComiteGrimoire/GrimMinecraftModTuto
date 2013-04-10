@@ -97,9 +97,9 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 				 if(y == 0)
 					 return;
 				 if(y - this.yCoord > maxY)
-					 maxY = y - this.yCoord ;
+					 maxY = y - this.yCoord;
 				 if(y - this.yCoord < minY)
-					 minY = y - this.yCoord ;
+					 minY = y - this.yCoord;
 			 }
 
 			 /** Generate the first "z" (north-south) side */
@@ -108,9 +108,9 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 				 if(y == 0)
 					 return;
 				 if(y - this.yCoord > maxY)
-					 maxY = y - this.yCoord ;
+					 maxY = y - this.yCoord;
 				 if(y - this.yCoord < minY)
-					 minY = y - this.yCoord ;
+					 minY = y - this.yCoord;
 			 }
 			 
 			 /** Generate the second "x" (east-west) side */
@@ -120,9 +120,9 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 				 if(y == 0)
 					 return;
 				 if(y - this.yCoord > maxY)
-					 maxY = y - this.yCoord ;
+					 maxY = y - this.yCoord;
 				 if(y - this.yCoord < minY)
-					 minY = y - this.yCoord ;
+					 minY = y - this.yCoord;
 			 }
 			 
 			 /** Generate the first "z" (north-south) side */
@@ -131,11 +131,15 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 				 if(y == 0)
 					 return;
 				 if(y - this.yCoord > maxY)
-					 maxY = y - this.yCoord ;
+					 maxY = y - this.yCoord;
 				 if(y - this.yCoord < minY)
-					 minY = y - this.yCoord ;
+					 minY = y - this.yCoord;
 			 }
 			 
+			 /** We check if the last fence is at the same height as the vineyard delimiter */
+			 if(y - this.yCoord > 1 || y - this.yCoord < -1)
+				 return;
+				 
 			 if(Math.abs(minY) > maxY)
 				 this.offsetY = minY;
 			 else

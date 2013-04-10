@@ -39,8 +39,8 @@ public class VineyardBlock extends BlockContainer{
 	
 	
 	public VineyardBlock(int id, Material material) {
-		super(id, 4, material);
-		this.blockIndexInTexture = 4;
+		super(id, 6, material);
+		this.blockIndexInTexture = 6;
 	}
 	
 	public void onBlockAdded(World par1World, int par2, int par3, int par4){
