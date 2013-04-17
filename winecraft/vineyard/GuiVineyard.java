@@ -47,8 +47,10 @@ public class GuiVineyard extends GuiContainer {
             fontRenderer.drawString("X: " + tile.getOffsetX(), 5, 18, 4210752);
             fontRenderer.drawString("Z: " + tile.getOffsetZ(), 5, 38, 4210752);
             
-            int perimetre = Math.abs(tile.getOffsetX())*2 + (Math.abs(tile.getOffsetZ()) - 2)*2 - 1;
-            fontRenderer.drawString("Need " + perimetre + " fences", 90, 18, 4210752);
+            if(tile.isVineyardDelimited())
+            	fontRenderer.drawString("COMPLETED", 90, 18, 4210752);
+            
+            fontRenderer.drawString("Need " + tile.getPerimeter() + " fences", 90, 18, 4210752);
     }
 	
 	@Override

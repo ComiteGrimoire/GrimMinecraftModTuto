@@ -17,7 +17,10 @@
 
 package tutorial.winecraft.vineyard;
 
+import java.util.Random;
+
 import tutorial.winecraft.TileEntityGrapeCrop;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -77,18 +80,32 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 }
 	 }
 	 
+	 public int getPerimeter(){
+		 //return(Math.abs(offsetX) - 1)*2 + (Math.abs(offsetZ) - 1)*2 - 1;
+		 //return Math.abs(offsetX) * Math.abs(offsetY) - (Math.abs(offsetX) - 1) * (Math.abs(offsetY) - 1) - 1;
+		 return 2*Math.abs(this.offsetX) + 2*Math.abs(this.offsetZ) - 1;
+	 }
+	 
 	 public void buildFences(World world, int offsetX, int offsetZ){
 		 this.offsetX = offsetX;
 		 this.offsetZ = offsetZ;
 		 
 		 if(this.vineyardItemStacks[0] != null && this.vineyardItemStacks[0].getDisplayName() != "Fence"){
-			 if(this.vineyardItemStacks[0].stackSize < Math.abs(offsetX)*2 + (Math.abs(offsetZ) - 2)*2 - 1){
+			 if(this.vineyardItemStacks[0].stackSize < getPerimeter()){
 				 error = "Not enough fences";
-				 System.out.println("Not enough fences ("+this.vineyardItemStacks[0].stackSize + ") " + (Math.abs(offsetX)*2 + (Math.abs(offsetZ) - 2)*2 - 1) + " " + offsetX + " " + offsetZ);
+				 System.out.println("Not enough fences");
 				 return;
 			 }
 			 int y = this.yCoord;
 			 int maxY = 0, minY = 0;
+			 
+			 /** Delete the fence from the inventory */
+			 int newStackSize = this.vineyardItemStacks[0].stackSize - getPerimeter();
+			 if(newStackSize > 0)
+				 this.vineyardItemStacks[0] = new ItemStack(Block.fence, newStackSize);
+			 else
+				 this.vineyardItemStacks[0] = null;
+			 
 			 
 			 /** Generate the first "x" (east-west) side */
 			 for(int i = (offsetX > 0 ? 1: -1); Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
@@ -160,7 +177,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
     public void updateEntity(){
         super.updateEntity();
         
-		if(this.isVineyardDelimited() && !worldObj.isRemote){
+		if(this.isVineyardDelimited() && (new Random()).nextInt(20) == 0&& !worldObj.isRemote){
 			//this.setVineyardDelimited(true);
 			TileEntity t;
 			 for(int i = (this.getOffsetX() > 0 ? 1: -1); Math.abs(i) < Math.abs(this.getOffsetX()); i += (this.getOffsetX() > 0 ? 1: -1)){
@@ -212,14 +229,21 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
                     }
             }
             this.offsetX = tagCompound.getShort("offsetX");
+            this.offsetY = tagCompound.getShort("offsetY");
             this.offsetZ = tagCompound.getShort("offsetZ");
+            if(tagCompound.getShort("completed") == 1)
+            	this.vineyardDelimited = true;
+            else
+            	this.vineyardDelimited = false;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
             super.writeToNBT(tagCompound);
             tagCompound.setShort("offsetX", (short)this.offsetX);
+            tagCompound.setShort("offsetY", (short)this.offsetY);
             tagCompound.setShort("offsetZ", (short)this.offsetZ);
+            tagCompound.setShort("completed", (short)(this.isVineyardDelimited()? 1:0));
                            
             NBTTagList itemList = new NBTTagList();
             for (int i = 0; i < this.vineyardItemStacks.length; i++) {
