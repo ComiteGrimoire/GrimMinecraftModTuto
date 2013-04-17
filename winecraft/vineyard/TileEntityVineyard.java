@@ -76,6 +76,8 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 }
 		 else{
 			 /** It's impossible to build a continuous fence  */
+			 error = "The fence perimeter isn't continuous";
+			 System.out.println("The fence perimeter isn't continuous");
 			 return 0;
 		 }
 	 }
@@ -91,84 +93,91 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 this.offsetZ = offsetZ;
 		 
 		 if(this.vineyardItemStacks[0] != null && this.vineyardItemStacks[0].getDisplayName() != "Fence"){
-			 if(this.vineyardItemStacks[0].stackSize < getPerimeter()){
-				 error = "Not enough fences";
-				 System.out.println("Not enough fences");
+			 error = "You need to put fences in the slot";
+			 System.out.println("You need to put fences in the slot");
+			 return;
+		 }
+		 if(this.vineyardItemStacks[0].stackSize < getPerimeter()){
+			 error = "Not enough fences";
+			 System.out.println("Not enough fences");
+			 return;
+		 }
+		 if(this.offsetX == 0 || this.offsetZ == 0){
+			 error = "Invalid offset";
+			 System.out.println("Invalid offset");
+			 return;
+		 }
+		 int y = this.yCoord;
+		 int maxY = 0, minY = 0;
+		 
+		 /** Delete the fence that we will be using from the slot */
+		 int newStackSize = this.vineyardItemStacks[0].stackSize - getPerimeter();
+		 if(newStackSize > 0)
+			 this.vineyardItemStacks[0] = new ItemStack(Block.fence, newStackSize);
+		 else
+			 this.vineyardItemStacks[0] = null;
+		 
+		 
+		 /** Generate the first "x" (east-west) side */
+		 for(int i = (offsetX > 0 ? 1: -1); Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
+			 /** If this the middle block of the row, we put a door here */
+			 y = putFence(world, this.xCoord + i, y, this.zCoord, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
+			 if(y == 0)
 				 return;
-			 }
-			 int y = this.yCoord;
-			 int maxY = 0, minY = 0;
-			 
-			 /** Delete the fence from the inventory */
-			 int newStackSize = this.vineyardItemStacks[0].stackSize - getPerimeter();
-			 if(newStackSize > 0)
-				 this.vineyardItemStacks[0] = new ItemStack(Block.fence, newStackSize);
-			 else
-				 this.vineyardItemStacks[0] = null;
-			 
-			 
-			 /** Generate the first "x" (east-west) side */
-			 for(int i = (offsetX > 0 ? 1: -1); Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
-				 /** If this the middle block of the row, we put a door here */
-				 y = putFence(world, this.xCoord + i, y, this.zCoord, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2));
-				 if(y == 0)
-					 return;
-				 if(y - this.yCoord > maxY)
-					 maxY = y - this.yCoord;
-				 if(y - this.yCoord < minY)
-					 minY = y - this.yCoord;
-			 }
+			 if(y - this.yCoord > maxY)
+				 maxY = y - this.yCoord;
+			 if(y - this.yCoord < minY)
+				 minY = y - this.yCoord;
+		 }
 
-			 /** Generate the first "z" (north-south) side */
-			 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
-				 y = putFence(world, this.xCoord + this.offsetX, y, this.zCoord + k, false);
-				 if(y == 0)
-					 return;
-				 if(y - this.yCoord > maxY)
-					 maxY = y - this.yCoord;
-				 if(y - this.yCoord < minY)
-					 minY = y - this.yCoord;
-			 }
-			 
-			 /** Generate the second "x" (east-west) side */
-			 for(int i = 0; Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
-				 /** If this the middle block of the row, we put a door here */
-				 y = putFence(world, this.xCoord + this.offsetX - i, y, this.zCoord + this.offsetZ, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2 ) - 1);
-				 if(y == 0)
-					 return;
-				 if(y - this.yCoord > maxY)
-					 maxY = y - this.yCoord;
-				 if(y - this.yCoord < minY)
-					 minY = y - this.yCoord;
-			 }
-			 
-			 /** Generate the first "z" (north-south) side */
-			 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
-				 y = putFence(world, this.xCoord, y, this.zCoord + this.offsetZ - k, false);
-				 if(y == 0)
-					 return;
-				 if(y - this.yCoord > maxY)
-					 maxY = y - this.yCoord;
-				 if(y - this.yCoord < minY)
-					 minY = y - this.yCoord;
-			 }
-			 
-			 /** We check if the last fence is at the same height as the vineyard delimiter */
-			 if(y - this.yCoord > 1 || y - this.yCoord < -1)
+		 /** Generate the first "z" (north-south) side */
+		 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
+			 y = putFence(world, this.xCoord + this.offsetX, y, this.zCoord + k, false);
+			 if(y == 0)
 				 return;
-				 
-			 if(Math.abs(minY) > maxY)
-				 this.offsetY = minY;
-			 else
-				 this.offsetY = maxY;
+			 if(y - this.yCoord > maxY)
+				 maxY = y - this.yCoord;
+			 if(y - this.yCoord < minY)
+				 minY = y - this.yCoord;
+		 }
+		 
+		 /** Generate the second "x" (east-west) side */
+		 for(int i = 0; Math.abs(i) < Math.abs(offsetX); i += (offsetX > 0 ? 1: -1)){
+			 /** If this the middle block of the row, we put a door here */
+			 y = putFence(world, this.xCoord + this.offsetX - i, y, this.zCoord + this.offsetZ, Math.abs(offsetX) > 3 && i == (int)(offsetX / 2 ) - 1);
+			 if(y == 0)
+				 return;
+			 if(y - this.yCoord > maxY)
+				 maxY = y - this.yCoord;
+			 if(y - this.yCoord < minY)
+				 minY = y - this.yCoord;
+		 }
+		 
+		 /** Generate the first "z" (north-south) side */
+		 for(int k = 0; Math.abs(k) < Math.abs(offsetZ); k += (offsetZ > 0 ? 1: -1)){
+			 y = putFence(world, this.xCoord, y, this.zCoord + this.offsetZ - k, false);
+			 if(y == 0)
+				 return;
+			 if(y - this.yCoord > maxY)
+				 maxY = y - this.yCoord;
+			 if(y - this.yCoord < minY)
+				 minY = y - this.yCoord;
+		 }
+		 
+		 /** We check if the last fence is at the same height as the vineyard delimiter */
+		 if(y - this.yCoord > 1 || y - this.yCoord < -1){
+			 error = "The fence perimeter isn't continuous";
+			 System.out.println("The fence perimeter isn't continuous");
+			 return;
+		 }
 			 
-			 this.vineyardDelimited = true;
-			 updateAngle();
-		 }
-		 else{
-			 error = "You need to put fences";
-			 System.out.println("You need to put fences");
-		 }
+		 if(Math.abs(minY) > maxY)
+			 this.offsetY = minY;
+		 else
+			 this.offsetY = maxY;
+		 
+		 this.vineyardDelimited = true;
+		 updateAngle();
 	 }
 	 
     /**
