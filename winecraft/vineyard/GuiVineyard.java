@@ -43,14 +43,18 @@ public class GuiVineyard extends GuiContainer {
 	@Override
     protected void drawGuiContainerForegroundLayer(int param1, int param2) {
             fontRenderer.drawString("Vineyard",  90, 6, 4210752);
-            fontRenderer.drawString(tile.getErrorMessage(),  90, 30, 4210752);
             fontRenderer.drawString("X: " + tile.getOffsetX(), 5, 18, 4210752);
             fontRenderer.drawString("Z: " + tile.getOffsetZ(), 5, 38, 4210752);
             
-            if(tile.isVineyardDelimited())
+            if(!tile.isVineyardDelimited()){
+                fontRenderer.drawString(tile.getErrorMessage(),  90, 30, 4210752);
+                fontRenderer.drawString("Need " + tile.getPerimeter() + " fences", 90, 18, 4210752);
+            }
+            else{
             	fontRenderer.drawString("COMPLETED", 90, 18, 4210752);
-            
-            fontRenderer.drawString("Need " + tile.getPerimeter() + " fences", 90, 18, 4210752);
+            	fontRenderer.drawString("Y: " + tile.getOffsetY(), 5, 58, 4210752);
+            	fontRenderer.drawString("Angle: " + tile.getAngle(), 50, 58, 4210752);
+            }
     }
 	
 	@Override
@@ -70,13 +74,16 @@ public class GuiVineyard extends GuiContainer {
             int xw = 150;
             int x = (width - xSize) / 2 - 2;
             int y = (height - ySize) / 2;// 27 - 35
-            controlList.add(new GuiButton(1, x + 42, y + 10, 15, 20, "+")); // 15 45
-            controlList.add(new GuiButton(2, x + 62, y + 10, 15, 20, "-"));
-            
-            controlList.add(new GuiButton(3, x + 42, y + 37, 15, 20, "+"));
-            controlList.add(new GuiButton(4, x + 62, y + 37, 15, 20, "-"));
-            
-            controlList.add(new GuiButton(5, x + 77, y + 60, 40, 20, "Build"));
+
+            if(!tile.isVineyardDelimited()){
+	            controlList.add(new GuiButton(1, x + 42, y + 10, 15, 20, "+")); // 15 45
+	            controlList.add(new GuiButton(2, x + 62, y + 10, 15, 20, "-"));
+	            
+	            controlList.add(new GuiButton(3, x + 42, y + 37, 15, 20, "+"));
+	            controlList.add(new GuiButton(4, x + 62, y + 37, 15, 20, "-"));
+	            
+	            controlList.add(new GuiButton(5, x + 77, y + 60, 40, 20, "Build"));
+            }
     }
 	
     protected void actionPerformed(GuiButton guibutton) {

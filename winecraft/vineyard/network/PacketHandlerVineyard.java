@@ -38,6 +38,7 @@ public class PacketHandlerVineyard implements IPacketHandler {
 		DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data));
 		try {
 			int packetID = data.read();
+			/** Client to Server */
 			if(packetID == 22) {
 				WinecraftPacket p = new WinecraftPacket();
 				p.readData(data);
@@ -45,6 +46,18 @@ public class PacketHandlerVineyard implements IPacketHandler {
 				TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(p.posX, p.posY, p.posZ);
 				if (tile instanceof TileEntityVineyard) {
 					((TileEntityVineyard) tile).buildFences(((EntityPlayer) player).worldObj, p.payload[0], p.payload[1]);
+				}
+			}
+			/** Server to Client */
+			if(packetID == 20) {
+				WinecraftPacket p = new WinecraftPacket();
+				p.readData(data);
+				// We convert Player (the Network instance) to EntityPlayer (the usable instance)
+				TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(p.posX, p.posY, p.posZ);
+				if (tile instanceof TileEntityVineyard) {
+					((TileEntityVineyard) tile).setOffsetY(p.payload[0]);
+					((TileEntityVineyard) tile).setVineyardDelimited(true);
+					((TileEntityVineyard) tile).updateAngle();
 				}
 			}
 		} catch (Exception ex) {

@@ -19,7 +19,12 @@ package tutorial.winecraft.vineyard;
 
 import java.util.Random;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
+
 import tutorial.winecraft.TileEntityGrapeCrop;
+import tutorial.winecraft.network.WinecraftPacket;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -92,10 +97,10 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 this.offsetX = offsetX;
 		 this.offsetZ = offsetZ;
 		 
-		 if(this.vineyardItemStacks[0] != null && this.vineyardItemStacks[0].getDisplayName() != "Fence"){
+		 if(this.vineyardItemStacks[0] == null || this.vineyardItemStacks[0].getDisplayName() != "Fence"){
 			 error = "You need to put fences in the slot";
 			 System.out.println("You need to put fences in the slot");
-			 return;
+			 //return;
 		 }
 		 if(this.vineyardItemStacks[0].stackSize < getPerimeter()){
 			 error = "Not enough fences";
@@ -178,6 +183,16 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 
 		 this.vineyardDelimited = true;
 		 updateAngle();
+		 
+		 /** We send the information to the client. */
+     	int[] payload = new int[1];
+     	payload[0] = this.getOffsetY();
+     	WinecraftPacket packet = new WinecraftPacket( 20,this.xCoord, this.yCoord, this.zCoord, payload);
+     	
+     	/** Go through every player on the server */
+     	for(int i = 0; i < world.playerEntities.size(); i++){
+     		PacketDispatcher.sendPacketToPlayer(packet.getPacket(), (Player)world.playerEntities.get(i));
+     	}
 	 }
 	 
     /**
@@ -344,6 +359,10 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	
 	public int getOffsetY() {
 		return offsetY;
+	}
+	
+	public void setOffsetY(int offsetY) {
+		this.offsetY = offsetY;
 	}
 
 	public void addOffsetZ() {
