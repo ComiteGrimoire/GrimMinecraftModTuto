@@ -53,7 +53,7 @@ public class PacketHandlerVineyard implements IPacketHandler {
 					if(((TileEntityVineyard) tile).getErrorMessage() != ""){
 				     	String[] payload = new String[1];
 				     	payload[0] = ((TileEntityVineyard) tile).getErrorMessage();
-				     	WinecraftPacket packetError = new WinecraftPacket( 21,p.posX, p.posY, p.posZ, null, payload);
+				     	WinecraftPacket packetError = new WinecraftPacket( 21,p.posX, p.posY, p.posZ, new int[0], payload);
 				     	
 				     	PacketDispatcher.sendPacketToPlayer(packetError.getPacket(), player);
 					}
@@ -78,7 +78,6 @@ public class PacketHandlerVineyard implements IPacketHandler {
 				if (tile instanceof TileEntityVineyard) {
 					((TileEntityVineyard) tile).setOffsetY(p.payload[0]);
 					((TileEntityVineyard) tile).setVineyardDelimited(true);
-					((TileEntityVineyard) tile).updateAngle();
 				}
 			}
 		} catch (Exception ex) {

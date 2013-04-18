@@ -44,7 +44,6 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	private int offsetX = 5;
 	private int offsetY = 0;
 	private int offsetZ = 5;
-	private int angle = 0;
 
 	private String error = "";
 	
@@ -97,10 +96,10 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 this.offsetZ = offsetZ;
 		 error = "";
 		 
-		 if(this.vineyardItemStacks[0] == null || this.vineyardItemStacks[0].getDisplayName() != "Fence"){
+		 if(this.vineyardItemStacks[0] == null || this.vineyardItemStacks[0].itemID != 85){
 			 error = "You need to put fences in the slot";
 			 System.out.println(error);
-			 //return;
+			 return;
 		 }
 		 if(this.vineyardItemStacks[0].stackSize < getPerimeter()){
 			 error = "Not enough fences";
@@ -182,17 +181,9 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 			 this.offsetY = maxY;
 		 
 		 this.vineyardDelimited = true;
-		 updateAngle();
 		 
 		 /** We send the information to the client. */
-     	int[] payload = new int[1];
-     	payload[0] = this.getOffsetY();
-     	WinecraftPacket packet = new WinecraftPacket( 20,this.xCoord, this.yCoord, this.zCoord, payload);
-     	
-     	/** Go through every player on the server */
-     	for(int i = 0; i < world.playerEntities.size(); i++){
-     		PacketDispatcher.sendPacketToPlayer(packet.getPacket(), (Player)world.playerEntities.get(i));
-     	}
+		 this.sendPacketToClient();
 	 }
 	 
     /**
@@ -202,6 +193,9 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
         super.updateEntity();
         
 		if(this.isVineyardDelimited() && (new Random()).nextInt(20) == 0&& !worldObj.isRemote){
+			/** We update the client information */
+			sendPacketToClient();
+			
 			TileEntity t;
 			 for(int i = (this.getOffsetX() > 0 ? 1: -1); Math.abs(i) < Math.abs(this.getOffsetX()); i += (this.getOffsetX() > 0 ? 1: -1)){
 				 for(int j = 0; Math.abs(j) <= Math.abs(this.offsetY); j += (this.offsetY > 0 ? 1: -1)){
@@ -212,13 +206,24 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 							 //worldObj.setBlock(this.xCoord + i, this.yCoord + j, this.zCoord + k, 5);
 							 if(!(((TileEntityGrapeCrop) t).isInVineyard())){
 								 ((TileEntityGrapeCrop) t).setInVineyard(true);
-								 ((TileEntityGrapeCrop) t).setAngle(angle);
+								 ((TileEntityGrapeCrop) t).setAngle(this.getAngle());
 							 }
 						 }
 					 }
 				}
 			 }
         }
+    }
+    
+    public void sendPacketToClient(){
+    	int[] payload = new int[1];
+     	payload[0] = this.getOffsetY();
+     	WinecraftPacket packet = new WinecraftPacket( 20,this.xCoord, this.yCoord, this.zCoord, payload);
+     	
+     	/** Go through every player on the server */
+     	for(int i = 0; i < worldObj.playerEntities.size(); i++){
+     		PacketDispatcher.sendPacketToPlayer(packet.getPacket(), (Player)worldObj.playerEntities.get(i));
+     	}
     }
     
     /** 
@@ -253,19 +258,17 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
             this.offsetX = tagCompound.getShort("offsetX");
             this.offsetY = tagCompound.getShort("offsetY");
             this.offsetZ = tagCompound.getShort("offsetZ");
-            if(tagCompound.getShort("completed") == 1)
-            	this.vineyardDelimited = true;
-            else
-            	this.vineyardDelimited = false;
+            this.vineyardDelimited = tagCompound.getBoolean("vineyardDelimited");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
             super.writeToNBT(tagCompound);
+            
             tagCompound.setShort("offsetX", (short)this.offsetX);
             tagCompound.setShort("offsetY", (short)this.offsetY);
             tagCompound.setShort("offsetZ", (short)this.offsetZ);
-            tagCompound.setShort("completed", (short)(this.isVineyardDelimited()? 1:0));
+            tagCompound.setBoolean("vineyardDelimited", this.isVineyardDelimited());
                            
             NBTTagList itemList = new NBTTagList();
             for (int i = 0; i < this.vineyardItemStacks.length; i++) {
@@ -388,15 +391,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		this.vineyardDelimited = vineyardDelimited;
 	}
 	
-	public void updateAngle(){
-		angle = (int) (180/Math.PI* Math.atan(this.offsetY/Math.sqrt(this.offsetX*this.offsetX + this.offsetZ*this.offsetZ)));
-	}
-	
 	public int getAngle() {
-		return angle;
-	}
-
-	public void setAngle(int angle) {
-		this.angle = angle;
+		return (int) (180/Math.PI* Math.atan(this.offsetY/Math.sqrt(this.offsetX*this.offsetX + this.offsetZ*this.offsetZ)));
 	}
 }

@@ -43,12 +43,11 @@ public class GuiVineyard extends GuiContainer {
 	}
 	@Override
     protected void drawGuiContainerForegroundLayer(int param1, int param2) {
-            fontRenderer.drawString("Vineyard",  90, 6, 4210752);
             fontRenderer.drawString("X: " + tile.getOffsetX(), 5, 18, 4210752);
             fontRenderer.drawString("Z: " + tile.getOffsetZ(), 5, 38, 4210752);
             
             if(!tile.isVineyardDelimited()){
-                fontRenderer.drawString(tile.getErrorMessage(),  90, 30, 4210752);
+                fontRenderer.drawString(tile.getErrorMessage(),  60, 6, 0xFF0000);
                 fontRenderer.drawString("Need " + tile.getPerimeter() + " fences", 90, 18, 4210752);
             }
             else{
