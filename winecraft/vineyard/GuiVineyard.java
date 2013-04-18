@@ -17,6 +17,7 @@
 
 package tutorial.winecraft.vineyard;
 
+import org.bouncycastle.asn1.crmf.Controls;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -54,6 +55,7 @@ public class GuiVineyard extends GuiContainer {
             	fontRenderer.drawString("COMPLETED", 90, 18, 4210752);
             	fontRenderer.drawString("Y: " + tile.getOffsetY(), 5, 58, 4210752);
             	fontRenderer.drawString("Angle: " + tile.getAngle(), 50, 58, 4210752);
+            	controlList.clear();
             }
     }
 	

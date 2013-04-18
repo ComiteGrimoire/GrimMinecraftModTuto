@@ -28,6 +28,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.network.IPacketHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketHandlerVineyard implements IPacketHandler {
@@ -42,10 +43,30 @@ public class PacketHandlerVineyard implements IPacketHandler {
 			if(packetID == 22) {
 				WinecraftPacket p = new WinecraftPacket();
 				p.readData(data);
-				// We convert Player (the Network instance) to EntityPlayer (the usable instance)
+
+				/** We load the TileEntity instance on the server */
 				TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(p.posX, p.posY, p.posZ);
 				if (tile instanceof TileEntityVineyard) {
 					((TileEntityVineyard) tile).buildFences(((EntityPlayer) player).worldObj, p.payload[0], p.payload[1]);
+					
+					/** If an error has occurred we send it to the client. */
+					if(((TileEntityVineyard) tile).getErrorMessage() != ""){
+				     	String[] payload = new String[1];
+				     	payload[0] = ((TileEntityVineyard) tile).getErrorMessage();
+				     	WinecraftPacket packetError = new WinecraftPacket( 21,p.posX, p.posY, p.posZ, null, payload);
+				     	
+				     	PacketDispatcher.sendPacketToPlayer(packetError.getPacket(), player);
+					}
+				}
+			}
+			/** Server Error to Client */
+			if(packetID == 21) {
+				WinecraftPacket p = new WinecraftPacket();
+				p.readData(data);
+				
+				TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(p.posX, p.posY, p.posZ);
+				if (tile instanceof TileEntityVineyard) {
+					((TileEntityVineyard) tile).setErrorMessage(p.payloadStr[0]);
 				}
 			}
 			/** Server to Client */

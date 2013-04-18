@@ -82,34 +82,34 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 else{
 			 /** It's impossible to build a continuous fence  */
 			 error = "The fence perimeter isn't continuous";
-			 System.out.println("The fence perimeter isn't continuous");
+			 System.out.println(error);
 			 return 0;
 		 }
 	 }
 	 
+	 /** Return the number of fences needed to construct the vineyard. */
 	 public int getPerimeter(){
-		 //return(Math.abs(offsetX) - 1)*2 + (Math.abs(offsetZ) - 1)*2 - 1;
-		 //return Math.abs(offsetX) * Math.abs(offsetY) - (Math.abs(offsetX) - 1) * (Math.abs(offsetY) - 1) - 1;
 		 return 2*Math.abs(this.offsetX) + 2*Math.abs(this.offsetZ) - 1;
 	 }
 	 
 	 public void buildFences(World world, int offsetX, int offsetZ){
 		 this.offsetX = offsetX;
 		 this.offsetZ = offsetZ;
+		 error = "";
 		 
 		 if(this.vineyardItemStacks[0] == null || this.vineyardItemStacks[0].getDisplayName() != "Fence"){
 			 error = "You need to put fences in the slot";
-			 System.out.println("You need to put fences in the slot");
+			 System.out.println(error);
 			 //return;
 		 }
 		 if(this.vineyardItemStacks[0].stackSize < getPerimeter()){
 			 error = "Not enough fences";
-			 System.out.println("Not enough fences");
+			 System.out.println(error);
 			 return;
 		 }
 		 if(this.offsetX == 0 || this.offsetZ == 0){
 			 error = "Invalid offset";
-			 System.out.println("Invalid offset");
+			 System.out.println(error);
 			 return;
 		 }
 		 int y = this.yCoord;
@@ -172,7 +172,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 /** We check if the last fence is at the same height as the vineyard delimiter */
 		 if(y - this.yCoord > 1 || y - this.yCoord < -1){
 			 error = "The fence perimeter isn't continuous";
-			 System.out.println("The fence perimeter isn't continuous");
+			 System.out.println(error);
 			 return;
 		 }
 			 
@@ -202,7 +202,6 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
         super.updateEntity();
         
 		if(this.isVineyardDelimited() && (new Random()).nextInt(20) == 0&& !worldObj.isRemote){
-			//this.setVineyardDelimited(true);
 			TileEntity t;
 			 for(int i = (this.getOffsetX() > 0 ? 1: -1); Math.abs(i) < Math.abs(this.getOffsetX()); i += (this.getOffsetX() > 0 ? 1: -1)){
 				 for(int j = 0; Math.abs(j) <= Math.abs(this.offsetY); j += (this.offsetY > 0 ? 1: -1)){
@@ -214,7 +213,6 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 							 if(!(((TileEntityGrapeCrop) t).isInVineyard())){
 								 ((TileEntityGrapeCrop) t).setInVineyard(true);
 								 ((TileEntityGrapeCrop) t).setAngle(angle);
-									System.out.println("x y z "+ this.offsetY);
 							 }
 						 }
 					 }
@@ -373,8 +371,13 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		if(!vineyardDelimited && this.offsetZ > -30)
 			this.offsetZ--;
 	}
+	
 	public String getErrorMessage(){
 		return this.error;
+	}
+	
+	public void setErrorMessage(String error){
+		this.error = error;
 	}
 
 	public boolean isVineyardDelimited() {

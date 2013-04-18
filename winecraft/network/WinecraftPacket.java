@@ -35,6 +35,7 @@ public class WinecraftPacket {
 	public int posZ;
 	
 	public int[] payload = new int[0];
+	public String[] payloadStr = new String[0];
 
 	public WinecraftPacket(){
 		
@@ -48,6 +49,18 @@ public class WinecraftPacket {
 		this.posZ = z;
 		
 		this.payload = payload;
+		this.payloadStr = null;
+	}
+	
+	public WinecraftPacket(int id, int x, int y, int z, int[] payloadInt, String[] payloadStr){
+		this.id = id;
+		
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
+		
+		this.payload = payloadInt;
+		this.payloadStr = payloadStr;
 	}
 	
 	public Packet getPacket() {
@@ -76,15 +89,27 @@ public class WinecraftPacket {
 		data.writeInt(posY);
 		data.writeInt(posZ);
 		
-		if (payload == null) { // Empty payload
+		/** Empty payload */
+		if (payload == null) { 
+			data.writeInt(0);
+		}
+		else{
+			data.writeInt(payload.length);
+			
+			for (int i = 0; i < payload.length; i++) {
+				data.writeInt(payload[i]);
+			}
+		}
+		
+		/** Empty payload */
+		if (payloadStr == null) {
 			data.writeInt(0);
 			return;
 		}
+		data.writeInt(payloadStr.length);
 		
-		data.writeInt(payload.length);
-		
-		for (int i = 0; i < payload.length; i++) {
-			data.writeInt(payload[i]);
+		for (int i = 0; i < payloadStr.length; i++) {
+			data.writeUTF(payloadStr[i]);
 		}
 	}
 	
@@ -98,6 +123,12 @@ public class WinecraftPacket {
 		
 		for (int i = 0; i < payload.length; i++) {
 			payload[i] = data.readInt();
+		}
+		
+		payloadStr = new String[data.readInt()];
+		
+		for (int i = 0; i < payloadStr.length; i++) {
+			payloadStr[i] = data.readUTF();
 		}
 	}
 	

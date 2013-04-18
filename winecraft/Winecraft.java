@@ -87,21 +87,17 @@ public class Winecraft {
        
         @PreInit
         public void preInit(FMLPreInitializationEvent event) {
-                // Stub Method
         }
        
         @Init
         public void load(FMLInitializationEvent event) {
-                
-               //Barrel stuffs
-
                 NetworkRegistry.instance().registerGuiHandler(this, guiHandler);
                 
                 GameRegistry.registerTileEntity(TileEntityBarrel.class, "TileEntityBarrel");
                 GameRegistry.registerTileEntity(TileEntityVineyard.class, "TileEntityVineyard");
                 GameRegistry.registerTileEntity(TileEntityGrapeCrop.class, "TileEntityGrapeCrop");
                 
-                // Adding recipe
+                // Adding barrel recipe
 	            TileEntityBarrel.addRecipe(300, 400, 2, this.grapeFruit, this.wine);
 	            TileEntityBarrel.addRecipe(30, 40, 6, Item.appleRed, this.wine); //debug
                 
@@ -127,13 +123,13 @@ public class Winecraft {
                 GameRegistry.registerBlock(grapeCrop, "GrapeCrop");
                 
                 registerNames();
+                registerRecipes();
                 
                 proxy.registerRenderers();
         }
        
         @PostInit
         public void postInit(FMLPostInitializationEvent event) {
-                // Stub Method
         }
         
         /**
@@ -151,13 +147,20 @@ public class Winecraft {
          * Method to register recipes in the CraftingManager
          */
         private void registerRecipes(){
-        	//Shaped Recipes
-        	//Barrel
+        	/** Barrel */
         	GameRegistry.addShapedRecipe(new ItemStack(barrelBlock), 
         								"xxx", 
         								"xyx", 
         								"xxx",
         								'x', new ItemStack(Block.planks), 
         								'y', new ItemStack(grapeFruit));
+        	
+        	/** Vineyard delimiter */
+        	GameRegistry.addShapedRecipe(new ItemStack(vineyardBlock), 
+					"xxx", 
+					"xyx", 
+					"xxx",
+					'x', new ItemStack(Block.fence), 
+					'y', new ItemStack(grapeFruit));
         }
 }
