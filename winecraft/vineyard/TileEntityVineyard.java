@@ -44,6 +44,8 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	private int offsetX = 5;
 	private int offsetY = 0;
 	private int offsetZ = 5;
+	
+	public int rainCooldown = 5000;
 
 	private String error = "";
 	
@@ -80,7 +82,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 }
 		 else{
 			 /** It's impossible to build a continuous fence  */
-			 error = "The fence perimeter isn't continuous";
+			 error = "Perimeter isn't continuous";
 			 System.out.println(error);
 			 return 0;
 		 }
@@ -97,7 +99,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 error = "";
 		 
 		 if(this.vineyardItemStacks[0] == null || this.vineyardItemStacks[0].itemID != 85){
-			 error = "You need to put fences in the slot";
+			 error = "Put fences in the slot";
 			 System.out.println(error);
 			 return;
 		 }
@@ -170,7 +172,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 
 		 /** We check if the last fence is at the same height as the vineyard delimiter */
 		 if(y - this.yCoord > 1 || y - this.yCoord < -1){
-			 error = "The fence perimeter isn't continuous";
+			 error = "Perimeter isn't continuous";
 			 System.out.println(error);
 			 return;
 		 }
@@ -182,7 +184,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 		 
 		 this.vineyardDelimited = true;
 		 
-		 /** We send the information to the client. */
+		 /** We send the information back to the client. */
 		 this.sendPacketToClient();
 	 }
 	 
@@ -192,22 +194,36 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
     public void updateEntity(){
         super.updateEntity();
         
-		if(this.isVineyardDelimited() && (new Random()).nextInt(20) == 0&& !worldObj.isRemote){
-			/** We update the client information */
+        rainCooldown++;
+        
+        /** If the vineyard is delimited and server side, 1 tick out 20  will update */
+		if(this.isVineyardDelimited() && !worldObj.isRemote && (new Random()).nextInt(20) == 0){
+			boolean isRaining = false;
+			if(!worldObj.isRaining()){
+				 rainCooldown = 0;
+			}
+			else if(rainCooldown > 5000){
+				 rainCooldown = 0;
+				 isRaining = true;
+			 }
+
+			/** We update the client information (GUI) */
 			sendPacketToClient();
 			
 			TileEntity t;
 			 for(int i = (this.getOffsetX() > 0 ? 1: -1); Math.abs(i) < Math.abs(this.getOffsetX()); i += (this.getOffsetX() > 0 ? 1: -1)){
 				 for(int j = 0; Math.abs(j) <= Math.abs(this.offsetY); j += (this.offsetY > 0 ? 1: -1)){
 					 for(int k = (this.getOffsetZ() > 0 ? 1: -1); Math.abs(k) < Math.abs(this.getOffsetZ()); k += (this.getOffsetZ() > 0 ? 1: -1)){
-						 //worldObj.setBlock(this.xCoord + i, this.yCoord + j, this.zCoord + k, 5);
-						 t = (worldObj.getBlockTileEntity(this.xCoord + i, this.yCoord + j, this.zCoord + k));
+						 t = worldObj.getBlockTileEntity(this.xCoord + i, this.yCoord + j, this.zCoord + k);
+						 /** If it's a Grape Crop with a loaded TileEntity */
 						 if(worldObj.getBlockId(this.xCoord + i, this.yCoord + j, this.zCoord + k) == 504 && t instanceof TileEntityGrapeCrop){
-							 //worldObj.setBlock(this.xCoord + i, this.yCoord + j, this.zCoord + k, 5);
 							 if(!(((TileEntityGrapeCrop) t).isInVineyard())){
 								 ((TileEntityGrapeCrop) t).setInVineyard(true);
 								 ((TileEntityGrapeCrop) t).setAngle(this.getAngle());
 							 }
+							 
+							if(isRaining)
+								((TileEntityGrapeCrop) t).addRain();
 						 }
 					 }
 				}
@@ -258,6 +274,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
             this.offsetX = tagCompound.getShort("offsetX");
             this.offsetY = tagCompound.getShort("offsetY");
             this.offsetZ = tagCompound.getShort("offsetZ");
+            this.rainCooldown = tagCompound.getShort("rainCD");
             this.vineyardDelimited = tagCompound.getBoolean("vineyardDelimited");
     }
 
@@ -268,6 +285,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
             tagCompound.setShort("offsetX", (short)this.offsetX);
             tagCompound.setShort("offsetY", (short)this.offsetY);
             tagCompound.setShort("offsetZ", (short)this.offsetZ);
+            tagCompound.setShort("rainCD", (short)this.rainCooldown);
             tagCompound.setBoolean("vineyardDelimited", this.isVineyardDelimited());
                            
             NBTTagList itemList = new NBTTagList();
@@ -289,7 +307,7 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	}
 
 	/** 
-	 * We check if it's in @barrelItemStacks and return the ItemStack 
+	 * We check if it's in the ItemStacks and return the ItemStack 
 	 */
 	public ItemStack getStackInSlot(int i) {
         return i >= 0 && i < this.vineyardItemStacks.length ? this.vineyardItemStacks[i] : null;

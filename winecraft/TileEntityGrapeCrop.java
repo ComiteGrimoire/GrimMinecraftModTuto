@@ -7,28 +7,38 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityGrapeCrop extends TileEntity {
 	
-	private double angle = 0;
+	private int angle = 0;
+	private int rainCounter = 0;
 	private boolean inVineyard = false;
 
 	@Override
     public void readFromNBT(NBTTagCompound tagCompound) {
             super.readFromNBT(tagCompound);
-            //this.offsetX = tagCompound.getShort("offsetX");
+            this.angle = tagCompound.getShort("angle");
+            this.rainCounter = tagCompound.getShort("rainCounter");
+            this.inVineyard = tagCompound.getBoolean("inVineyard");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
             super.writeToNBT(tagCompound);
-           //tagCompound.setShort("offsetX", (short)this.offsetX);
+           tagCompound.setShort("angle", (short)this.angle);
+           tagCompound.setShort("rainCounter", (short)this.rainCounter);
+           tagCompound.setBoolean("inVineyard", this.inVineyard);
     }
 	
-	public double getAngle() {
+	public int getAngle() {
 		return angle;
 	}
 
-	public void setAngle(double angle) {
+	public void addRain() {
+		rainCounter++;
+		System.out.println(this.blockMetadata+"Rain counter: " + rainCounter);
+	}
+	
+	public void setAngle(int angle) {
 		this.angle = angle;
-		System.out.println(angle + " work god dammit");
+		System.out.println("Angle of the current Vineyard: " + angle);
 	}
 
 	public boolean isInVineyard() {

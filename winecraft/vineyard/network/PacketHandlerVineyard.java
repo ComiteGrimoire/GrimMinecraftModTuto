@@ -47,6 +47,7 @@ public class PacketHandlerVineyard implements IPacketHandler {
 				/** We load the TileEntity instance on the server */
 				TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(p.posX, p.posY, p.posZ);
 				if (tile instanceof TileEntityVineyard) {
+					/** We build the fence */
 					((TileEntityVineyard) tile).buildFences(((EntityPlayer) player).worldObj, p.payload[0], p.payload[1]);
 					
 					/** If an error has occurred we send it to the client. */
@@ -73,7 +74,7 @@ public class PacketHandlerVineyard implements IPacketHandler {
 			if(packetID == 20) {
 				WinecraftPacket p = new WinecraftPacket();
 				p.readData(data);
-				// We convert Player (the Network instance) to EntityPlayer (the usable instance)
+				/** We convert Player (the Network instance) to EntityPlayer (the usable instance) */
 				TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(p.posX, p.posY, p.posZ);
 				if (tile instanceof TileEntityVineyard) {
 					((TileEntityVineyard) tile).setOffsetY(p.payload[0]);

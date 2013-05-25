@@ -54,10 +54,13 @@ public class VineyardBlock extends BlockContainer{
 	
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int idk, float wtf, float are, float you_doing){
 		if (world.isRemote){
+        	TileEntityVineyard tile = (TileEntityVineyard)world.getBlockTileEntity(x, y, z);
+            System.out.println("[client]"+tile.rainCooldown);
             return true;
         }
         else{
         	TileEntityVineyard tile = (TileEntityVineyard)world.getBlockTileEntity(x, y, z);
+            System.out.println("[server]"+tile.rainCooldown);
 
         	if (tile == null) {
                 return false;
