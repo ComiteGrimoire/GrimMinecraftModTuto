@@ -1,5 +1,7 @@
-package tutorial.winecraft.wine;
+package winecraft.wine;
 
+import winecraft.Winecraft;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -17,11 +19,14 @@ public class WineItem extends ItemFood {
 		super(ID, healAmount, IsWolfFood);
 		this.setAlwaysEdible();
 	}
-	
-	public ItemStack onFoodEaten( ItemStack itemStack, World world, EntityPlayer player){
+	public void registerIcons(IconRegister iconRegister){
+	    this.itemIcon = iconRegister.registerIcon(Winecraft.modid+":"+"wine");
+    }
+	public ItemStack onEaten( ItemStack itemStack, World world, EntityPlayer player){
 		player.addPotionEffect(effect);
 		
-		return super.onFoodEaten(itemStack, world, player);
+		
+		return super.onEaten(itemStack, world, player);
 	}
 	
 	public void setFoodEffect(PotionEffect effect){

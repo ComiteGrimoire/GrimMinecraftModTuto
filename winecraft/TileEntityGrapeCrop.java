@@ -1,4 +1,4 @@
-package tutorial.winecraft;
+package winecraft;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

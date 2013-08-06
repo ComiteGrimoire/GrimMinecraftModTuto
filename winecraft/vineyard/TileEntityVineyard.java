@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft.vineyard;
+package winecraft.vineyard;
 
 import java.util.Random;
 
@@ -23,8 +23,8 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-import tutorial.winecraft.TileEntityGrapeCrop;
-import tutorial.winecraft.network.WinecraftPacket;
+import winecraft.TileEntityGrapeCrop;
+import winecraft.network.WinecraftPacket;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -411,5 +411,17 @@ public class TileEntityVineyard extends TileEntity implements IInventory {
 	
 	public int getAngle() {
 		return (int) (180/Math.PI* Math.atan(this.offsetY/Math.sqrt(this.offsetX*this.offsetX + this.offsetZ*this.offsetZ)));
+	}
+
+	@Override
+	public boolean isInvNameLocalized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

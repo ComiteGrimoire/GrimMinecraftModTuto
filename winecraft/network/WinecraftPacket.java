@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft.network;
+package winecraft.network;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;

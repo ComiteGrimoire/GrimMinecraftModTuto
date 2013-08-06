@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft;
+package winecraft;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;

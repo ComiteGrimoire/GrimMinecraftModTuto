@@ -15,14 +15,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft;
+package winecraft;
 
-import tutorial.winecraft.barrel.ContainerBarrel;
-import tutorial.winecraft.barrel.GuiBarrel;
-import tutorial.winecraft.barrel.TileEntityBarrel;
-import tutorial.winecraft.vineyard.ContainerVineyard;
-import tutorial.winecraft.vineyard.GuiVineyard;
-import tutorial.winecraft.vineyard.TileEntityVineyard;
+import winecraft.barrel.ContainerBarrel;
+import winecraft.barrel.GuiBarrel;
+import winecraft.barrel.TileEntityBarrel;
+import winecraft.vineyard.ContainerVineyard;
+import winecraft.vineyard.GuiVineyard;
+import winecraft.vineyard.TileEntityVineyard;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;

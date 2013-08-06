@@ -15,13 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft.vineyard.network;
+package winecraft.vineyard.network;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
-import tutorial.winecraft.network.WinecraftPacket;
-import tutorial.winecraft.vineyard.TileEntityVineyard;
+import winecraft.network.WinecraftPacket;
+import winecraft.vineyard.TileEntityVineyard;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;

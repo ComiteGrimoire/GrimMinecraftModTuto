@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft.barrel;
+package winecraft.barrel;
 
 import java.util.Random;
 
@@ -23,6 +23,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -32,16 +33,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.src.ModLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import tutorial.winecraft.BasicBlock;
-import tutorial.winecraft.CommonProxy;
-import tutorial.winecraft.Winecraft;
+import winecraft.BasicBlock;
+import winecraft.CommonProxy;
+import winecraft.Winecraft;
 
 public class BarrelBlock extends BlockContainer{
 	
 	public BarrelBlock(int id, Material material){
 		super(id, material);
-		this.blockIndexInTexture = 3;
 	}
 
 	
@@ -49,10 +50,18 @@ public class BarrelBlock extends BlockContainer{
         return new TileEntityBarrel();
 	}
 	
+	 public void registerIcons(IconRegister iconRegister){
+		    this.blockIcon = iconRegister.registerIcon(Winecraft.modid+":"+"barrel_top");
+	  }
+	
 	/**
 	 * Different texture for different side
 	 */
-	public int getBlockTextureFromSide(int sideNumber){
+	/*
+	 * public Icon getBlockTextureFromSide(int id){
+        return this.getIcon(id, 0);
+    }
+	
 	    switch (sideNumber){
 	        case 1:
 	            return 4;
@@ -61,7 +70,7 @@ public class BarrelBlock extends BlockContainer{
 	        default:
 	            return 3;
 	    }
-	}
+	}*/
 	
 	/**
      * Called upon block activation (right click on the block.)

@@ -15,15 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft;
+package winecraft;
 
-import tutorial.winecraft.barrel.BarrelBlock;
-import tutorial.winecraft.barrel.GuiBarrel;
-import tutorial.winecraft.barrel.TileEntityBarrel;
-import tutorial.winecraft.vineyard.TileEntityVineyard;
-import tutorial.winecraft.vineyard.VineyardBlock;
-import tutorial.winecraft.vineyard.network.*;
-import tutorial.winecraft.wine.WineItem;
+import winecraft.barrel.BarrelBlock;
+import winecraft.barrel.GuiBarrel;
+import winecraft.barrel.TileEntityBarrel;
+import winecraft.vineyard.TileEntityVineyard;
+import winecraft.vineyard.VineyardBlock;
+import winecraft.vineyard.network.*;
+import winecraft.wine.WineItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -51,7 +51,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid="Winecraft", name="Winecraft", version="0.0.0")
+@Mod(modid=Winecraft.modid, name="Winecraft", version="0.0.0")
 
 /**
 @NetworkMod(clientSideRequired=true, serverSideRequired=false,
@@ -61,25 +61,27 @@ serverPacketHandlerSpec =
 @SidedPacketHandler(channels = {"TutorialMod" }, packetHandler = ServerPacketHandler.class))*/
 @NetworkMod(channels = { "Winecraft" }, packetHandler = PacketHandlerVineyard.class, clientSideRequired = true, serverSideRequired = true)
 public class Winecraft {
-    	@Instance("Winecraft")
+    	@Instance("winecraft")
     	public static Winecraft instance;
+    	
+    	public static final String modid = "winecraft";
     
     	private GuiHandler guiHandler = new GuiHandler();
 
     
-		public static final Block grapeCrop = new GrapeCrop(504);
-		public static final Block barrelBlock = new BarrelBlock(505, Material.iron);
-		public static final Block vineyardBlock = new VineyardBlock(506, Material.wood).setCreativeTab(CreativeTabs.tabBlock);
-		public static final ItemSeeds grapeSeeds = (ItemSeeds) new ItemSeeds(5001,
-	            									grapeCrop.blockID, 
-	            									Block.tilledField.blockID)
-	    											.setIconIndex(2)
-	    											.setItemName("seeds.grape")
-	    											.setTextureFile(CommonProxy.ITEMS_PNG);
-	    public static final Item grapeFruit = new WinecraftItem(5002);
-	    public static final Item wine = new WineItem(5003, 2, false).setItemName("drink.wine")
-	    		.setIconIndex(1)
-	    		.setTextureFile(CommonProxy.ITEMS_PNG);
+		public static final Block grapeCrop = new GrapeCrop(504)
+													.setUnlocalizedName("grapecrop");
+		public static final Block barrelBlock = new BarrelBlock(505, Material.iron)
+													.setUnlocalizedName("barrel_top");
+		public static final Block vineyardBlock = new VineyardBlock(506, Material.wood)
+													.setUnlocalizedName("vineyard")
+													.setCreativeTab(CreativeTabs.tabBlock);
+		// icon 2
+		public static final GrapeSeed grapeSeeds = (GrapeSeed) new GrapeSeed(5001, grapeCrop.blockID,  Block.tilledField.blockID)
+	    											.setUnlocalizedName("seeds");
+	    public static final Item grapeFruit = new GrapeItem(5002).setUnlocalizedName("grape");
+	    // icon 1
+	    public static final Item wine = new WineItem(5003, 2, false).setUnlocalizedName("wine");
 	    
        
         @SidedProxy(clientSide="tutorial.winecraft.client.ClientProxy", serverSide="tutorial.winecraft.CommonProxy")
@@ -101,14 +103,12 @@ public class Winecraft {
 	            TileEntityBarrel.addRecipe(300, 400, 2, this.grapeFruit, this.wine);
 	            TileEntityBarrel.addRecipe(30, 40, 6, Item.appleRed, this.wine); //debug
                 
-                barrelBlock
-            	.setTextureFile(CommonProxy.BLOCK_PNG)
-            	.setCreativeTab(CreativeTabs.tabBlock);
+                barrelBlock.setCreativeTab(CreativeTabs.tabBlock);
             
 	            GameRegistry.registerBlock(barrelBlock, "Barrel");
-	            barrelBlock.setBlockName("Barrel");
+	            barrelBlock.setUnlocalizedName("Barrel");
 	            GameRegistry.registerBlock(vineyardBlock, "Vineyard Delimiter");
-	            vineyardBlock.setBlockName("Vineyard Delimiter");
+	            vineyardBlock.setUnlocalizedName("Vineyard Delimiter");
 	            
 	            
 	            TileEntity.addMapping(TileEntityVineyard.class, "collector");
@@ -126,10 +126,6 @@ public class Winecraft {
                 registerRecipes();
                 
                 proxy.registerRenderers();
-        }
-       
-        @PostInit
-        public void postInit(FMLPostInitializationEvent event) {
         }
         
         /**
@@ -149,11 +145,11 @@ public class Winecraft {
         private void registerRecipes(){
         	/** Barrel */
         	GameRegistry.addShapedRecipe(new ItemStack(barrelBlock), 
-        								"xxx", 
-        								"xyx", 
-        								"xxx",
-        								'x', new ItemStack(Block.planks), 
-        								'y', new ItemStack(grapeFruit));
+					"xxx", 
+					"xyx", 
+					"xxx",
+					'x', new ItemStack(Block.planks), 
+					'y', new ItemStack(grapeFruit));
         	
         	/** Vineyard delimiter */
         	GameRegistry.addShapedRecipe(new ItemStack(vineyardBlock), 

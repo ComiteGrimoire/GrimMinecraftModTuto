@@ -15,11 +15,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft.barrel;
+package winecraft.barrel;
 
 import java.util.ArrayList;
-import tutorial.winecraft.Winecraft;
-import tutorial.winecraft.wine.WineItem;
+import winecraft.Winecraft;
+import winecraft.wine.WineItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -30,7 +30,6 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
 
 
 public class TileEntityBarrel extends TileEntity  implements IInventory{
@@ -117,7 +116,7 @@ public class TileEntityBarrel extends TileEntity  implements IInventory{
         			
         		if(this.barrelItemStacks[1] == null )
         			this.barrelItemStacks[1] = new ItemStack(brew);
-        		else if(this.barrelItemStacks[1].getItemName() == brew.getItemName()){
+        		else if(this.barrelItemStacks[1].getItemName() == brew.getUnlocalizedName()){
         			int s = this.barrelItemStacks[1].stackSize + 1;
         			this.barrelItemStacks[1] = new ItemStack(brew);
         			this.barrelItemStacks[1].stackSize = s;
@@ -294,5 +293,17 @@ public class TileEntityBarrel extends TileEntity  implements IInventory{
 
 	public void setBarrelCurrentRecipeId(int barrelCurrentRecipeId) {
 		this.barrelCurrentRecipeId = barrelCurrentRecipeId;
+	}
+
+	@Override
+	public boolean isInvNameLocalized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

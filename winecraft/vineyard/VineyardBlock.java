@@ -15,19 +15,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft.vineyard;
+package winecraft.vineyard;
 
 import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import tutorial.winecraft.CommonProxy;
-import tutorial.winecraft.Winecraft;
-import tutorial.winecraft.barrel.TileEntityBarrel;
+import winecraft.CommonProxy;
+import winecraft.Winecraft;
+import winecraft.barrel.TileEntityBarrel;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -36,12 +37,16 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class VineyardBlock extends BlockContainer{
-	
+	// Texture 6
 	
 	public VineyardBlock(int id, Material material) {
-		super(id, 6, material);
-		this.blockIndexInTexture = 6;
+		super(id, material);
 	}
+	
+
+    public void registerIcons(IconRegister iconRegister){
+	    this.blockIcon = iconRegister.registerIcon(Winecraft.modid+":"+"vineyard");
+    }
 	
 	public void onBlockAdded(World par1World, int par2, int par3, int par4){
 		par1World.setBlockTileEntity(par2, par3, par4, this.createNewTileEntity(par1World));
@@ -60,20 +65,15 @@ public class VineyardBlock extends BlockContainer{
         }
         else{
         	TileEntityVineyard tile = (TileEntityVineyard)world.getBlockTileEntity(x, y, z);
-            System.out.println("[server]"+tile.rainCooldown);
 
-        	if (tile == null) {
+        	if (tile == null){
                 return false;
         	}
+            System.out.println("[server]"+tile.rainCooldown);
 	    	player.openGui(Winecraft.instance, 1, world, x, y, z);
 	        return true;
         }
 	}
-	
-	 @Override
-     public String getTextureFile () {
-             return CommonProxy.BLOCK_PNG;
-     }
 	 
 	 @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6) {

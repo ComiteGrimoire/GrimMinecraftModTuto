@@ -15,14 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft.client;
+package winecraft.client;
 
 import net.minecraftforge.client.MinecraftForgeClient;
-import tutorial.winecraft.CommonProxy;
+import winecraft.CommonProxy;
 
 public class ClientProxy extends CommonProxy {
 	public void registerRenderers () {
-		MinecraftForgeClient.preloadTexture(ITEMS_PNG);
-		MinecraftForgeClient.preloadTexture(BLOCK_PNG);
 	}
 }

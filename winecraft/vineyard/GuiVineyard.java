@@ -15,22 +15,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft.vineyard;
+package winecraft.vineyard;
 
 import org.bouncycastle.asn1.crmf.Controls;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
 
-import tutorial.winecraft.CommonProxy;
-import tutorial.winecraft.client.ClientProxy;
-import tutorial.winecraft.network.WinecraftPacket;
+import winecraft.CommonProxy;
+import winecraft.Winecraft;
+import winecraft.client.ClientProxy;
+import winecraft.network.WinecraftPacket;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.ResourceLocation;
 
 public class GuiVineyard extends GuiContainer {
 	
@@ -58,15 +60,15 @@ public class GuiVineyard extends GuiContainer {
             	fontRenderer.drawString("COMPLETED", 90, 18, 4210752);
             	fontRenderer.drawString("Y: " + tile.getOffsetY(), 5, 68, 4210752);
             	fontRenderer.drawString("Angle: " + tile.getAngle(), 50, 48, 4210752);
-            	controlList.clear();
+            	buttonList.clear();
             }
     }
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-        int texture = mc.renderEngine.getTexture("/tutorial/winecraft/vineyard.png");
+       //int texture = mc.renderEngine.getTexture("/tutorial/winecraft/vineyard.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(texture);
+        this.mc.renderEngine.func_110577_a(new ResourceLocation(Winecraft.modid, "textures/gui/vineyard.png"));
         
         int x = (width - xSize) / 2 - 2;
         int y = (height - ySize) / 2;
@@ -81,13 +83,13 @@ public class GuiVineyard extends GuiContainer {
             int y = (height - ySize) / 2;
 
             if(!tile.isVineyardDelimited()){
-	            controlList.add(new GuiButton(1, x + 42, y + 20, 15, 20, "+"));
-	            controlList.add(new GuiButton(2, x + 62, y + 20, 15, 20, "-"));
+	            buttonList.add(new GuiButton(1, x + 42, y + 20, 15, 20, "+"));
+	            buttonList.add(new GuiButton(2, x + 62, y + 20, 15, 20, "-"));
 	            
-	            controlList.add(new GuiButton(3, x + 42, y + 47, 15, 20, "+"));
-	            controlList.add(new GuiButton(4, x + 62, y + 47, 15, 20, "-"));
+	            buttonList.add(new GuiButton(3, x + 42, y + 47, 15, 20, "+"));
+	            buttonList.add(new GuiButton(4, x + 62, y + 47, 15, 20, "-"));
 	            
-	            controlList.add(new GuiButton(5, x + 87, y + 60, 40, 20, "Build"));
+	            buttonList.add(new GuiButton(5, x + 87, y + 60, 40, 20, "Build"));
             }
     }
 	
@@ -111,7 +113,7 @@ public class GuiVineyard extends GuiContainer {
 	            	payload[0] = tile.getOffsetX();
 	    	        payload[1] = tile.getOffsetZ();
 	            	WinecraftPacket packet = new WinecraftPacket( 22,tile.xCoord, tile.yCoord, tile.zCoord, payload);
-	            	FMLClientHandler.instance().getClient().getSendQueue().addToSendQueue(packet.getPacket());
+	            	///FMLClientHandler.instance().getClient().getSendQueue().addToSendQueue(packet.getPacket());
             }
     }
 }

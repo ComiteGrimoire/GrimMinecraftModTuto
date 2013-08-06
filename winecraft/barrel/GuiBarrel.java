@@ -15,14 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft.barrel;
+package winecraft.barrel;
 
 import org.lwjgl.opengl.GL11;
+
+import winecraft.Winecraft;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.ResourceLocation;
 
 public class GuiBarrel extends GuiContainer {
 	
@@ -42,9 +45,10 @@ public class GuiBarrel extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-        int texture = mc.renderEngine.getTexture("/tutorial/winecraft/barrel.png");
+        //int texture = mc.renderEngine.getTexture("/tutorial/winecraft/barrel.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(texture);
+        this.mc.renderEngine.func_110577_a(new ResourceLocation(Winecraft.modid, "textures/gui/barrel.png"));
+        //this.mc.func_110434_K().func_110577_a(new ResourceLocation(Winecraft.modid, "textures/gui/barrel.png"));
         
         int x = (width - xSize) / 2 - 2;
         int y = (height - ySize) / 2;

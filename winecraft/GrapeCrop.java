@@ -15,26 +15,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft;
+package winecraft;
 
 import java.util.Random;
 
-import tutorial.winecraft.barrel.TileEntityBarrel;
+import winecraft.barrel.TileEntityBarrel;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 public class GrapeCrop extends BlockContainer {
-	
+	// 32 = texture
     public GrapeCrop (int id) {
-        super(id, 32, Material.plants);
+        super(id, Material.plants);
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.5F, 1.0F);
         setTickRandomly(true);
+    }
+    
+    public void registerIcons(IconRegister iconRegister){
+	    this.blockIcon = iconRegister.registerIcon(Winecraft.modid+":"+"grapecrop");
     }
     
 	public TileEntity createNewTileEntity(World var1){
@@ -62,10 +67,12 @@ public class GrapeCrop extends BlockContainer {
     }
     
     
-    @Override
-    public int getBlockTextureFromSideAndMetadata (int side, int metadata) {
+   /** 
+    * fix that when i got the time
+    * @Override
+    public int getBlockTextureFromSideAndMetadata(int side, int metadata) {
         return 32 + metadata;
-    }
+    }*/
 
     /***
      * Is called every Minecraft Tick (20 times/second.)
@@ -80,7 +87,7 @@ public class GrapeCrop extends BlockContainer {
             return;
         }
 
-        world.setBlockMetadataWithNotify(x, y, z, 1);
+        world.setBlockMetadataWithNotify(x, y, z, 0, 1);
     }
 
     @Override
@@ -88,7 +95,7 @@ public class GrapeCrop extends BlockContainer {
             int neighborId) {
         if (!canBlockStay(world, x, y, z)) {
             dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-            world.setBlockWithNotify(x, y, z, 0);
+            world.setBlockMetadataWithNotify(x, y, z, 0, 0);
         }
     }
 
@@ -122,8 +129,4 @@ public class GrapeCrop extends BlockContainer {
         return Winecraft.grapeSeeds.itemID;
     }
 	
-	@Override
-    public String getTextureFile () {
-            return CommonProxy.BLOCK_PNG;
-    }
 }

@@ -15,19 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package tutorial.winecraft;
+package winecraft;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 
 public class BasicBlock extends Block{
 
-	public BasicBlock(int id, int texture, Material material) {
-		super(id, texture, material);
+	public BasicBlock(int id, Material material) {
+		super(id,  material);
 	}
 	
-	 @Override
-     public String getTextureFile () {
-             return CommonProxy.BLOCK_PNG;
-     }
 }
